@@ -58,10 +58,9 @@ npx serve .
 
 > Для живих котирувань потрібен інтернет. Без нього в каталозі замість цін будуть прочерки, решта сайту працює як звичайно.
 
-## Live Demo
-
-- **GitHub Pages:** _посилання буде додано_ <!-- https://<username>.github.io/equilock/ -->
-- **Netlify:** _посилання буде додано_ <!-- https://<site-name>.netlify.app/ -->
+   ## Live Demo
+   - GitHub Pages: https://mchlss77.github.io/Equilock/
+   - Netlify: https://equilockexchng.netlify.app
 
 ## Автор
 
