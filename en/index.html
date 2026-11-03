@@ -1,0 +1,1426 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQUILOCK — safe P2P and OTC crypto deals with escrow</title>
+    <!-- SEO: опис сторінки для сніпета в пошуку -->
+    <meta
+      name="description"
+      content="EQUILOCK is an escrow platform for P2P and OTC USDT/UAH exchange. Multisig 2-of-3, rate locking, Same-Name verification and independent arbitration.">
+    <!-- Іконка вкладки з assets -->
+    <link rel="icon" type="image/png" href="../assets/icons/logo-mark.png">
+    <!-- Мовні версії сторінки (для пошуковиків) -->
+    <link rel="alternate" hreflang="uk" href="../index.html">
+    <link rel="alternate" hreflang="en" href="index.html">
+
+    <!-- Тема (темна/світла) — до стилів і без defer, щоб не було спалаху іншої теми -->
+    <script src="../js/theme.js"></script>
+
+    <!-- Шрифти Manrope і JetBrains Mono — локально (assets/fonts, @font-face у css/tailwind.css).
+         preload — основний шрифт для кирилиці, щоб текст швидше отримав фірмовий шрифт -->
+    <link rel="preload" href="../assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Font Awesome 6.7.2 — локально (assets/vendor/fontawesome); той самий файл, що був на CDN -->
+    <link rel="stylesheet" href="../assets/vendor/fontawesome/css/all.min.css">
+
+    <!-- Власні стилі -->
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- Tailwind CSS, зібраний локально з tailwind.config.js (замість Play CDN). Підключений після style.css —
+         у тому ж порядку, в якому Play CDN вставляв свої стилі -->
+    <link rel="stylesheet" href="../css/tailwind.css">
+
+    <!-- Мінімальний JS для шапки: кнопка мобільного меню (defer — після розбору HTML) -->
+    <script src="../js/header.js" defer></script>
+    <!-- Відкладене завантаження відео й карти: iframe створюється лише після натискання кнопки -->
+    <script src="../js/embeds.js" defer></script>
+    <!-- Рядок курсів у шапці: живі дані CoinGecko -->
+    <script src="../js/ticker.js" defer></script>
+  </head>
+  <!-- Базова типографіка сторінки (раніше — body у style.css) -->
+  <body class="min-h-screen break-words font-sans text-sm leading-[1.55] text-ink antialiased md:text-base bg-page">
+    <!-- Доступність: дає змогу з клавіатури одразу перейти до основного вмісту -->
+    <a class="fixed left-4 top-3 z-[100] flex items-center min-h-[44px] px-4 py-2.5 font-semibold text-white -translate-y-[200%] rounded-ui bg-primary-dark transition-transform duration-200 focus:translate-y-0" href="#main">Skip to main content</a>
+
+    <!-- header: орієнтир «шапка сайту» (role=banner). Липкий: -top-7 (= висота рядка курсів, 28px)
+         ховає курси при прокрутці, а панель з меню лишається видимою.
+         data-header — точка входу для js/header.js -->
+    <header class="sticky -top-7 z-10" data-header>
+      <!-- aside: курси — додаткова інформація, не пов'язана з основним вмістом -->
+      <aside
+        class="flex items-center overflow-hidden h-7 border-b px-4 md:px-6 lg:px-8 whitespace-nowrap font-mono text-2xs text-muted border-line bg-page"
+        aria-label="Current rates"
+        data-ticker
+      >
+        <!-- ===== РЯДОК КУРСІВ: живі дані CoinGecko (js/ticker.js), один запит на всі пари =====
+             До відповіді й при помилці — «—»; зміна за 24 год зелена/червона. BTC і ETH — у USD,
+             бо CoinGecko не підтримує USDT як валюту порівняння. Стан озвучує sr-only рядок нижче. -->
+        <ul class="flex gap-5 sm:justify-center sm:gap-10 w-full">
+          <li data-ticker-coin="tether" data-ticker-vs="uah" data-ticker-digits="2">
+            <span class="mr-1.5 font-bold text-ink">USDT/UAH</span> <span data-ticker-price>—</span> UAH
+            <span class="text-muted" data-ticker-change></span>
+          </li>
+          <li data-ticker-coin="bitcoin" data-ticker-vs="usd" data-ticker-digits="0">
+            <span class="mr-1.5 font-bold text-ink">BTC/USD</span> $<span data-ticker-price>—</span>
+            <span class="text-muted" data-ticker-change></span>
+          </li>
+          <li data-ticker-coin="ethereum" data-ticker-vs="usd" data-ticker-digits="0">
+            <span class="mr-1.5 font-bold text-ink">ETH/USD</span> $<span data-ticker-price>—</span>
+            <span class="text-muted" data-ticker-change></span>
+          </li>
+        </ul>
+        <p class="sr-only" aria-live="polite" data-ticker-status>Loading rates…</p>
+        <!-- ===== /РЯДОК КУРСІВ ===== -->
+      </aside>
+
+      <div class="border-b border-line bg-page/90 backdrop-blur">
+        <!-- flex-wrap: на mobile відкрите меню (basis-full) переноситься на новий рядок під логотип -->
+        <div class="flex flex-wrap items-center gap-x-4 md:gap-x-2 lg:gap-x-3 mx-auto w-full max-w-[1056px] px-4 min-h-[60px] md:px-6 lg:px-8">
+          <a
+            class="flex shrink-0 items-center gap-2 min-h-[60px] min-w-[44px] rounded-ui transition-opacity duration-200 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            href="index.html"
+            aria-label="EQUILOCK — home"
+          >
+            <!-- alt="" — назва вже є в aria-label посилання; invert + hue-rotate перефарбовують логотип під темну тему.
+                 На планшеті (md…lg) лишається лише знак, щоб меню вмістилося в один рядок -->
+            <img
+              class="h-7 w-7 mix-blend-screen invert hue-rotate-180 light:invert-0 light:hue-rotate-0 light:mix-blend-multiply"
+              src="../assets/icons/logo-mark.webp"
+              alt=""
+              width="28"
+              height="28">
+            <span class="md:max-lg:hidden font-extrabold tracking-logo" aria-hidden="true">EQUILOCK</span>
+          </a>
+
+          <!-- Гамбургер (лише mobile). peer — nav нижче читає його aria-expanded;
+               group — іконки всередині міняються ☰ ↔ ✕ -->
+          <button
+            class="peer group inline-flex items-center justify-center md:hidden ml-auto h-11 w-11 border text-ink rounded-ui border-line transition-colors duration-200 hover:border-primary hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            type="button"
+            aria-label="Main menu"
+            aria-expanded="false"
+            aria-controls="main-nav"
+          >
+            <i class="fa-solid fa-bars group-aria-expanded:hidden" aria-hidden="true"></i>
+            <i class="fa-solid fa-xmark hidden group-aria-expanded:inline-block" aria-hidden="true"></i>
+          </button>
+
+          <!-- nav: на mobile прихована, доки гамбургер не має aria-expanded="true"; від md — горизонтальна.
+               aria-current позначає поточну сторінку -->
+          <nav
+            id="main-nav"
+            class="hidden basis-full md:flex md:basis-auto max-md:peer-aria-expanded:block border-t pb-4 pt-2 md:mx-auto md:border-0 md:p-0 border-line"
+            aria-label="Main navigation"
+          >
+            <ul class="flex flex-col gap-1 md:flex-row md:items-center md:gap-0.5 lg:gap-1">
+              <li>
+                <a
+                  class="flex items-center min-h-[44px] px-3 py-2.5 md:px-1 md:py-1.5 lg:px-2 text-base text-muted md:text-[13px] lg:text-sm hover:text-ink aria-[current=page]:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:bg-elevated"
+                  href="index.html"
+                  aria-current="page"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  class="flex items-center min-h-[44px] px-3 py-2.5 md:px-1 md:py-1.5 lg:px-2 text-base text-muted md:text-[13px] lg:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                  href="exchange.html"
+                  >Start exchange</a
+                >
+              </li>
+              <li>
+                <a
+                  class="flex items-center min-h-[44px] px-3 py-2.5 md:px-1 md:py-1.5 lg:px-2 text-base text-muted md:text-[13px] lg:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                  href="catalog.html"
+                  >Crypto catalog</a
+                >
+              </li>
+              <li>
+                <a
+                  class="flex items-center min-h-[44px] px-3 py-2.5 md:px-1 md:py-1.5 lg:px-2 text-base text-muted md:text-[13px] lg:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                  href="about.html"
+                  >About us</a
+                >
+              </li>
+
+              <!-- Dropdown «Ресурси»: кнопка (не посилання) — вона лише відкриває список.
+                   На mobile список розгортається під кнопкою, від md — випадає панеллю -->
+              <li class="relative">
+                <button
+                  class="peer group flex items-center justify-between gap-1.5 min-h-[44px] w-full px-3 py-2.5 md:w-auto md:px-1 md:py-1.5 lg:px-2 text-base text-muted md:text-[13px] lg:text-sm hover:text-ink aria-expanded:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="resources-menu"
+                >
+                  Resources
+                  <i
+                    class="fa-solid fa-chevron-down text-3xs transition-transform duration-200 group-aria-expanded:rotate-180"
+                    aria-hidden="true"
+                  ></i>
+                </button>
+                <ul
+                  id="resources-menu"
+                  class="hidden md:invisible md:absolute md:right-0 md:top-full md:block md:peer-aria-expanded:visible peer-aria-expanded:block pl-3 md:mt-2 md:w-60 md:border md:p-1.5 md:translate-y-1 md:rounded-card md:border-line md:bg-surface md:opacity-0 md:shadow-float md:transition-[opacity,transform,visibility] md:duration-200 md:peer-aria-expanded:translate-y-0 md:peer-aria-expanded:opacity-100"
+                >
+                  <li>
+                    <a
+                      class="flex items-center gap-2.5 min-h-[44px] px-3 py-2.5 md:py-2 text-base text-muted md:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                      href="#pricing-title"
+                    >
+                      <i class="fa-solid fa-tags w-4 text-center text-primary" aria-hidden="true"></i>
+                      Pricing
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="flex items-center gap-2.5 min-h-[44px] px-3 py-2.5 md:py-2 text-base text-muted md:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                      href="docs.html"
+                    >
+                      <i class="fa-solid fa-book w-4 text-center text-primary" aria-hidden="true"></i>
+                      Documentation
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="flex items-center gap-2.5 min-h-[44px] px-3 py-2.5 md:py-2 text-base text-muted md:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                      href="faq.html"
+                    >
+                      <i class="fa-solid fa-scale-balanced w-4 text-center text-primary" aria-hidden="true"></i>
+                      FAQ &amp; legal
+                    </a>
+                  </li>
+                  <!-- Розділи цієї сторінки (якірні посилання лендингу, у порядку секцій) -->
+                  <li>
+                    <a
+                      class="flex items-center gap-2.5 min-h-[44px] px-3 py-2.5 md:py-2 text-base text-muted md:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                      href="#how-it-works"
+                    >
+                      <i class="fa-solid fa-list-ol w-4 text-center text-primary" aria-hidden="true"></i>
+                      How it works
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="flex items-center gap-2.5 min-h-[44px] px-3 py-2.5 md:py-2 text-base text-muted md:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                      href="#exchange"
+                    >
+                      <i class="fa-solid fa-arrow-right-arrow-left w-4 text-center text-primary" aria-hidden="true"></i>
+                      Exchange
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="flex items-center gap-2.5 min-h-[44px] px-3 py-2.5 md:py-2 text-base text-muted md:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                      href="#advantages"
+                    >
+                      <i class="fa-solid fa-shield-halved w-4 text-center text-primary" aria-hidden="true"></i>
+                      Advantages
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="flex items-center gap-2.5 min-h-[44px] px-3 py-2.5 md:py-2 text-base text-muted md:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                      href="#services"
+                    >
+                      <i class="fa-solid fa-briefcase w-4 text-center text-primary" aria-hidden="true"></i>
+                      Services
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="flex items-center gap-2.5 min-h-[44px] px-3 py-2.5 md:py-2 text-base text-muted md:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                      href="#facts"
+                    >
+                      <i class="fa-solid fa-hashtag w-4 text-center text-primary" aria-hidden="true"></i>
+                      Terms in numbers
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <!-- Лише mobile: мова й CTA всередині відкритого меню -->
+              <li class="flex flex-wrap items-center gap-2 md:hidden mt-2 border-t pt-4 border-line">
+                <!-- Перемикач мови UA / EN: та сама сторінка іншою мовою (англійські — у папці en/) -->
+                <div class="flex items-center gap-0.5 border p-0.5 rounded-ui border-line" role="group" aria-label="Site language">
+                  <i class="fa-solid fa-globe px-1.5 text-xs text-muted" aria-hidden="true"></i>
+                  <a class="inline-flex items-center justify-center h-10 min-w-9 px-1.5 text-xs font-semibold text-muted rounded-md transition-colors duration-200 hover:text-ink aria-[current=true]:bg-elevated aria-[current=true]:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="../index.html" hreflang="uk" lang="uk"><span aria-hidden="true">UA</span><span class="sr-only">Українська</span></a>
+                  <a class="inline-flex items-center justify-center h-10 min-w-9 px-1.5 text-xs font-semibold text-muted rounded-md transition-colors duration-200 hover:text-ink aria-[current=true]:bg-elevated aria-[current=true]:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="index.html" hreflang="en" lang="en" aria-current="true"><span aria-hidden="true">EN</span><span class="sr-only">English</span></a>
+                </div>
+                <!-- Перемикач теми: кнопки з aria-pressed, логіка — js/theme.js -->
+                <div class="flex border p-0.5 rounded-ui border-line" role="group" aria-label="Color theme" data-theme-switch>
+                  <button class="inline-flex items-center justify-center h-10 w-9 text-sm text-muted rounded-md transition-colors duration-200 hover:text-ink aria-pressed:bg-elevated aria-pressed:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" type="button" data-theme-value="light" aria-pressed="false" aria-label="Light theme"><i class="fa-regular fa-sun" aria-hidden="true"></i></button>
+                  <button class="inline-flex items-center justify-center h-10 w-9 text-sm text-muted rounded-md transition-colors duration-200 hover:text-ink aria-pressed:bg-elevated aria-pressed:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" type="button" data-theme-value="dark" aria-pressed="true" aria-label="Dark theme"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
+                </div>
+                <a
+                  class="inline-flex basis-full items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-6 py-3 text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-transparent bg-primary-dark text-white hover:bg-primary-hover hover:shadow-glow active:shadow-none focus-visible:ring-primary focus-visible:ring-offset-page"
+                  href="#exchange-title"
+                  >Start exchange</a
+                >
+              </li>
+            </ul>
+          </nav>
+
+          <!-- Дії праворуч (від md). Мова й перемикач теми — від lg, щоб на планшеті вмістилося меню -->
+          <div class="hidden shrink-0 items-center gap-2 md:flex">
+            <!-- Перемикач мови UA / EN: та сама сторінка іншою мовою (англійські — у папці en/) -->
+            <div class="hidden md:flex items-center gap-0.5 border p-0.5 rounded-ui border-line" role="group" aria-label="Site language">
+              <a class="inline-flex items-center justify-center h-10 min-w-9 px-1.5 max-lg:aria-[current=true]:hidden text-xs font-semibold text-muted rounded-md transition-colors duration-200 hover:text-ink aria-[current=true]:bg-elevated aria-[current=true]:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="../index.html" hreflang="uk" lang="uk"><span aria-hidden="true">UA</span><span class="sr-only">Українська</span></a>
+              <a class="inline-flex items-center justify-center h-10 min-w-9 px-1.5 max-lg:aria-[current=true]:hidden text-xs font-semibold text-muted rounded-md transition-colors duration-200 hover:text-ink aria-[current=true]:bg-elevated aria-[current=true]:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="index.html" hreflang="en" lang="en" aria-current="true"><span aria-hidden="true">EN</span><span class="sr-only">English</span></a>
+            </div>
+            <!-- Перемикач теми: кнопки з aria-pressed, логіка — js/theme.js -->
+            <div class="hidden md:flex border p-0.5 rounded-ui border-line" role="group" aria-label="Color theme" data-theme-switch>
+              <button class="inline-flex items-center justify-center h-10 w-9 text-sm text-muted rounded-md max-lg:aria-pressed:hidden transition-colors duration-200 hover:text-ink aria-pressed:bg-elevated aria-pressed:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" type="button" data-theme-value="light" aria-pressed="false" aria-label="Light theme"><i class="fa-regular fa-sun" aria-hidden="true"></i></button>
+              <button class="inline-flex items-center justify-center h-10 w-9 text-sm text-muted rounded-md max-lg:aria-pressed:hidden transition-colors duration-200 hover:text-ink aria-pressed:bg-elevated aria-pressed:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" type="button" data-theme-value="dark" aria-pressed="true" aria-label="Dark theme"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
+            </div>
+            <!-- CTA (SaaS): та сама Primary CTA Button, компактний розмір для шапки -->
+            <a
+              class="inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-4 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-transparent bg-primary-dark text-white hover:bg-primary-hover hover:shadow-glow active:shadow-none focus-visible:ring-primary focus-visible:ring-offset-page"
+              href="#exchange-title"
+              >Start exchange</a
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- main: єдиний основний вміст сторінки. scroll-mt-20 на секціях — щоб липка шапка не перекривала заголовок після переходу за якорем -->
+    <main id="main">
+      <!-- HERO: mobile і планшет — одна колонка (текст → візуал); від lg (десктоп) — дві колонки.
+           Текстова колонка ширша (1.15fr), щоб h1 лишався головним елементом екрана -->
+      <section class="border-b py-12 md:py-16 lg:py-20 border-line" aria-labelledby="hero-title">
+        <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-14 mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <div>
+            <p class="inline-block border px-3.5 py-1 font-mono text-2xs uppercase tracking-badge text-primary-light rounded-full border-primary/40 bg-primary/10">
+              A guarantor platform for crypto deals
+            </p>
+            <!-- Єдиний h1 на сторінці і найбільший текст на ній. text-balance рівномірно розподіляє рядки -->
+            <h1 class="mb-5 mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-balance text-ink sm:text-5xl lg:text-[3.5rem]" id="hero-title">
+              Safe P2P and OTC crypto deals
+              <span class="text-primary">without the risk of scams</span>
+            </h1>
+            <p class="max-w-[34rem] text-base text-muted md:text-lg">
+              We keep your funds safe in escrow until payment is fully confirmed. A simple step-by-step process without confusing crypto jargon. Code instead of promises.
+            </p>
+            <!-- CTA: Button з дизайн-системи, розмір lg. Основна дія — primary (заливка, стрілка, світіння на hover);
+                 друга — приглушений ghost (сірий текст, рамка без світіння), тож основна домінує. На mobile — у стовпчик на всю ширину -->
+            <div class="flex flex-col gap-3 mt-8 sm:flex-row sm:items-center">
+              <a
+                class="group w-full sm:w-auto inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-6 py-3 text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-transparent bg-primary-dark text-white hover:bg-primary-hover hover:shadow-glow active:shadow-none focus-visible:ring-primary focus-visible:ring-offset-page"
+                href="exchange.html"
+              >
+                Start exchange
+                <i class="fa-solid fa-arrow-right text-sm transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true"></i>
+              </a>
+              <a
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 motion-reduce:transition-none px-6 py-3 text-base border-line text-muted hover:text-ink hover:border-primary/40 hover:bg-elevated focus-visible:ring-primary focus-visible:ring-offset-page"
+                href="#how-it-works"
+              >
+                How it works
+                <i class="fa-solid fa-arrow-down text-xs" aria-hidden="true"></i>
+              </a>
+            </div>
+            <!-- Підказка під CTA: умова з тарифів платформи, знімає сумнів перед кліком -->
+            <p class="mt-3 text-xs text-muted">
+              <i class="fa-solid fa-circle-check text-success" aria-hidden="true"></i>
+              0% fee for the buyer
+            </p>
+            <!-- Ключові механізми захисту — факти з опису платформи, не статистика -->
+            <ul class="flex flex-wrap gap-2 mt-8 font-mono text-2xs text-muted">
+              <li class="inline-flex items-center gap-1.5 border px-2.5 py-1 rounded-full border-line bg-elevated">
+                <i class="fa-solid fa-lock text-success" aria-hidden="true"></i> Multisig 2-of-3
+              </li>
+              <li class="inline-flex items-center gap-1.5 border px-2.5 py-1 rounded-full border-line bg-elevated">
+                <i class="fa-solid fa-id-card text-success" aria-hidden="true"></i> Same-Name
+              </li>
+              <li class="inline-flex items-center gap-1.5 border px-2.5 py-1 rounded-full border-line bg-elevated">
+                <i class="fa-solid fa-scale-balanced text-success" aria-hidden="true"></i> Arbitration
+              </li>
+            </ul>
+          </div>
+
+          <!-- Візуал: банер з assets + картка «Прозорий таймлайн». На mobile/планшеті обмежений за шириною,
+               щоб не перебивав h1; на десктопі займає свою колонку повністю -->
+          <div class="mx-auto w-full max-w-md lg:max-w-none">
+            <img
+              class="aspect-[4/3] object-cover w-full border rounded-card border-line"
+              src="../assets/images/hero-banner-960.webp"
+              srcset="../assets/images/hero-banner-640.webp 640w, ../assets/images/hero-banner-960.webp 960w, ../assets/images/hero-banner-1280.webp 1280w"
+              sizes="(min-width: 480px) 448px, calc(100vw - 32px)"
+              alt="3D safe with a shield — a symbol of funds protected in escrow"
+              width="960"
+              height="960"
+              fetchpriority="high">
+            <!-- article: прозорий таймлайн угоди (текст — _materials/H1 H2 CTA Блок про нас.pdf). Заходить на фото від'ємним відступом — без absolute, лишається в потоці -->
+            <article class="relative mx-4 sm:mx-5 -mt-[70px] px-4 py-3.5 rounded-card border border-line bg-surface shadow-float" aria-label="Transparent deal timeline">
+              <div class="flex items-center justify-between gap-2 text-2xs">
+                <p class="font-mono text-muted">Transparent timeline</p>
+                <p class="inline-flex items-center gap-1 border px-2.5 py-1 whitespace-nowrap text-xs font-normal text-primary-light rounded-full border-primary/40 bg-primary/10">
+                  <i class="fa-solid fa-circle text-[0.5em]" aria-hidden="true"></i>
+                  In escrow
+                </p>
+              </div>
+              <p class="mb-2.5 mt-1 font-mono text-[22px] font-bold">Multisig 2-of-3</p>
+              <!-- ol: етапи угоди йдуть у визначеному порядку -->
+              <ol class="grid grid-cols-3 gap-1.5 text-3xs text-muted">
+                <li class="border-t-[3px] pt-1.5 border-success">Locked</li>
+                <li class="border-t-[3px] pt-1.5 text-ink border-primary" aria-current="step">Paid</li>
+                <li class="border-t-[3px] pt-1.5 border-line">Completed</li>
+              </ol>
+              <p class="mt-2.5 border-t pt-2 font-mono text-3xs text-muted border-line">
+                <i class="fa-solid fa-circle-check text-success" aria-hidden="true"></i>
+                You and your counterparty see every status in real time
+              </p>
+            </article>
+          </div>
+        </div>
+
+
+        <!-- Показники під Hero: параметри захисту з ЛР №2 і тарифів (не маркетингова статистика) -->
+        <div class="mx-auto mt-10 w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <!-- dl: показник (dd) і його підпис (dt); flex-col-reverse ставить число зверху.
+               divide-* малює роздільники між показниками -->
+          <dl class="grid grid-cols-1 sm:grid-cols-3 divide-y border sm:divide-x sm:divide-y-0 divide-line rounded-card border-line">
+            <div class="flex flex-col-reverse px-5 py-4">
+              <dt class="text-xs text-muted">multisig escrow: buyer, seller, arbitrator</dt>
+              <dd class="font-mono text-[22px] font-bold">2-of-3</dd>
+            </div>
+            <div class="flex flex-col-reverse px-5 py-4">
+              <dt class="text-xs text-muted">rate locked with a timer</dt>
+              <dd class="font-mono text-[22px] font-bold">15 min</dd>
+            </div>
+            <div class="flex flex-col-reverse px-5 py-4">
+              <dt class="text-xs text-muted">for an arbitration decision in a dispute</dt>
+              <dd class="font-mono text-[22px] font-bold">24–48 h</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="how-it-works" aria-labelledby="steps-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">How it works</p>
+          <h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="steps-title">How our protection works</h2>
+
+          <!-- ol: кроки мають чіткий порядок; номер «01 / 04» прихований від читачів екрана, бо порядок уже задає список.
+               1 → 2 → 4 колонки -->
+          <ol class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mt-6">
+            <li class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <span class="inline-block mb-3.5 border px-2 py-0.5 font-mono text-3xs text-primary rounded-full border-primary/40" aria-hidden="true">01 / 04</span>
+              <h3 class="mb-1.5 text-base font-semibold">Instant Lock</h3>
+              <p class="text-muted">The moment a deal is created, the crypto is locked in escrow (multisig 2-of-3 / smart contract).</p>
+            </li>
+            <li class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <span class="inline-block mb-3.5 border px-2 py-0.5 font-mono text-3xs text-primary rounded-full border-primary/40" aria-hidden="true">02 / 04</span>
+              <h3 class="mb-1.5 text-base font-semibold">Transparent timeline</h3>
+              <p class="text-muted">You and your counterparty see every status in real time: “locked” → “paid” → “completed”.</p>
+            </li>
+            <li class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <span class="inline-block mb-3.5 border px-2 py-0.5 font-mono text-3xs text-primary rounded-full border-primary/40" aria-hidden="true">03 / 04</span>
+              <h3 class="mb-1.5 text-base font-semibold">Automatic verification</h3>
+              <p class="text-muted">Rate locking with a timer and protection against payments from third-party cards.</p>
+            </li>
+            <li class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <span class="inline-block mb-3.5 border px-2 py-0.5 font-mono text-3xs text-primary rounded-full border-primary/40" aria-hidden="true">04 / 04</span>
+              <h3 class="mb-1.5 text-base font-semibold">Instant freeze in a dispute</h3>
+              <p class="text-muted">The “Call arbitration” button freezes the payout and opens an evidence form without tying up capital.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ===== ВІДЕОГІД (YouTube) =====
+           iframe не завантажується одразу: спершу кнопка «Переглянути відео»; після натискання js/embeds.js
+           створює iframe з youtube-nocookie.com (без cookie, доки відео не запущено) у контейнері aspect-video.
+           Без JS лишається посилання «Відкрити на YouTube» у підписі. -->
+      <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="video-guide" aria-labelledby="video-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Video guide</p>
+          <h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="video-title">How crypto escrow works: a step-by-step video guide</h2>
+          <p class="mb-9 max-w-[560px] text-sm text-muted md:text-base">
+            A short video about how escrow protects both sides of a crypto deal. By the Crestnetx channel; the video is in English.
+          </p>
+
+          <figure>
+            <!-- Адаптивний контейнер 16:9; data-embed-frame — сюди скрипт вставить iframe замість кнопки -->
+            <div class="relative grid place-items-center overflow-hidden w-full rounded-card border border-line bg-surface aspect-video" data-embed-frame>
+              <!-- Прев'ю до натискання: локальне зображення (сторінка ще не звертається до зовнішнього сервісу); затемнення — щоб кнопку й підказку було добре видно -->
+              <img
+                class="absolute inset-0 h-full w-full object-cover"
+                src="../assets/images/video-preview-1280.webp"
+                srcset="../assets/images/video-preview-640.webp 640w, ../assets/images/video-preview-1280.webp 1280w"
+                sizes="(min-width: 1056px) 992px, calc(100vw - 32px)"
+                alt=""
+                width="1280"
+                height="720"
+                loading="lazy"
+                decoding="async">
+              <div class="absolute inset-0 bg-page/70" aria-hidden="true"></div>
+              <div class="relative flex flex-col items-center gap-3 p-5 text-center">
+                <button
+                  class="inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-6 py-3 text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-transparent bg-primary-dark text-white hover:bg-primary-hover hover:shadow-glow active:shadow-none focus-visible:ring-primary focus-visible:ring-offset-surface"
+                  type="button"
+                  data-embed-src="https://www.youtube-nocookie.com/embed/S-b1hqzOj28?autoplay=1"
+                  data-embed-title="Video “Crypto Escrow Made Easy: A Step-by-Step Guide” (Crestnetx): how crypto escrow works"
+                  data-embed-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                >
+                  <i class="fa-solid fa-play" aria-hidden="true"></i>
+                  Watch the video
+                </button>
+                <p class="text-xs font-medium text-ink">The video loads from youtube-nocookie.com only after you click.</p>
+              </div>
+            </div>
+            <figcaption class="flex flex-col gap-1 mt-3 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+              <span>«Crypto Escrow Made Easy: A Step-by-Step Guide» — Crestnetx, YouTube</span>
+              <a class="inline-flex items-center gap-1.5 min-h-[44px] font-semibold text-ink underline decoration-primary underline-offset-4 rounded-ui transition duration-200 ease-out hover:decoration-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:ring-offset-page" href="https://www.youtube.com/watch?v=S-b1hqzOj28" target="_blank" rel="noopener noreferrer">
+                Open on YouTube
+                <i class="fa-solid fa-arrow-up-right-from-square text-xs" aria-hidden="true"></i>
+                <span class="sr-only">(opens in a new tab)</span>
+              </a>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+      <!-- ===== /ВІДЕОГІД ===== -->
+
+      <!-- ОБМІН: опис ліворуч, калькулятор праворуч (від lg); на mobile — одна колонка.
+           Тексти — зі сторінки exchange.html; форма відправляє суму на exchange.html, як і раніше -->
+      <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="exchange" aria-labelledby="exchange-section-title">
+        <div class="grid items-center gap-10 lg:grid-cols-2 mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <div>
+            <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Exchange</p>
+            <h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="exchange-section-title">Start a USDT/UAH exchange</h2>
+            <p class="max-w-[560px] text-sm text-muted md:text-base">
+              Choose a merchant, lock the rate and open an escrow deal. Funds are locked in Multisig 2-of-3 until payment is confirmed.
+            </p>
+            <ul class="space-y-2 mt-6 text-sm">
+              <li class="flex items-start gap-2">
+                <i class="fa-solid fa-circle-check mt-1 text-success" aria-hidden="true"></i>
+                <span>The rate is locked for 15 minutes.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i class="fa-solid fa-circle-check mt-1 text-success" aria-hidden="true"></i>
+                <span>The seller's assets are locked in the smart contract right after the deal is created.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i class="fa-solid fa-circle-check mt-1 text-success" aria-hidden="true"></i>
+                <span>0% fee for the buyer.</span>
+              </li>
+            </ul>
+          </div>
+
+            <!-- form: калькулятор приймає введення користувача; label пов'язує підписи з полями -->
+            <form class="p-5 md:p-6 rounded-card border border-line bg-surface" action="exchange.html" method="get" aria-labelledby="exchange-title">
+              <div class="flex items-center justify-between gap-3 mb-4 text-sm font-semibold">
+                <p class="scroll-mt-20" id="exchange-title">USDT → UAH exchange</p>
+                <p class="inline-flex items-center gap-1 border px-2.5 py-1 whitespace-nowrap text-xs font-normal text-success rounded-full border-success/30 bg-success/[.08]">
+                  <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                  Escrow protection
+                </p>
+              </div>
+
+              <div class="border px-3.5 py-3 rounded-ui border-line bg-page transition-colors duration-200 focus-within:border-primary">
+                <label class="block text-2xs text-muted" for="give-amount">You give</label>
+                <div class="flex items-center justify-between gap-3">
+                  <!-- no-spinner (style.css): прибирає стрілки числового поля — це псевдоелементи браузера -->
+                  <input
+                    class="no-spinner min-h-[44px] w-full min-w-0 border-0 font-mono text-[22px] font-bold bg-transparent outline-none"
+                    type="number"
+                    id="give-amount"
+                    name="amount"
+                    value="1000"
+                    min="1"
+                    inputmode="decimal">
+                  <span class="inline-flex items-center gap-1 border px-2.5 py-1 whitespace-nowrap text-xs font-normal rounded-full border-line bg-elevated">USDT</span>
+                </div>
+                <p class="font-mono text-3xs text-muted">TRC-20 · ERC-20 · BEP-20</p>
+              </div>
+              <!-- Стрілка трохи заходить на обидва поля (від'ємний відступ) -->
+              <div class="relative -my-1.5 text-center text-sm text-primary" aria-hidden="true">
+                <i class="fa-solid fa-arrows-up-down"></i>
+              </div>
+              <div class="border px-3.5 py-3 rounded-ui border-line bg-page transition-colors duration-200 focus-within:border-primary">
+                <span class="block text-2xs text-muted" id="get-label">You get</span>
+                <div class="flex items-center justify-between gap-3">
+                  <!-- output: результат розрахунку, а не поле для введення -->
+                  <output class="font-mono text-[22px] font-bold" for="give-amount" aria-labelledby="get-label">41 200 UAH</output>
+                  <span class="inline-flex items-center gap-1 border px-2.5 py-1 whitespace-nowrap text-xs font-normal rounded-full border-line bg-elevated">
+                    <i class="fa-regular fa-credit-card" aria-hidden="true"></i>
+                    Bank card
+                  </span>
+                </div>
+              </div>
+
+              <!-- dl: пари «назва — значення» -->
+              <dl class="mb-2 mt-4 text-xs">
+                <div class="flex items-center justify-between gap-3 py-1">
+                  <dt class="text-muted">Rate</dt>
+                  <dd class="font-mono">1 USDT = 41.20 UAH</dd>
+                </div>
+                <div class="flex items-center justify-between gap-3 py-1">
+                  <dt class="text-muted">Guarantor fee (0.5%)</dt>
+                  <dd class="font-mono">5,00 USDT</dd>
+                </div>
+                <div class="flex items-center justify-between gap-3 py-1">
+                  <dt class="inline-flex items-center gap-1 text-muted">
+                    <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                    Rate lock
+                  </dt>
+                  <dd class="font-mono text-primary-light">14:57</dd>
+                </div>
+              </dl>
+              <!-- progress: залишок часу фіксації курсу. Колір смуги — псевдоелементи в style.css (.timer) -->
+              <progress
+                class="timer block overflow-hidden mb-[18px] h-[3px] w-full border-0 appearance-none rounded-full bg-line"
+                max="900"
+                value="897"
+                aria-label="Time left on the rate lock"
+              >
+                14:57
+              </progress>
+
+              <!-- button: відправка форми -->
+              <button class="w-full inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-transparent bg-primary-dark text-white hover:bg-primary-hover hover:shadow-glow active:shadow-none focus-visible:ring-primary focus-visible:ring-offset-surface" type="submit">Start exchange</button>
+            </form>
+        </div>
+      </section>
+
+      <!-- ПЕРЕВАГИ: три рівні захисту. Компонент Card; сітка 1 → 2 → 3 колонки.
+           Іконки з білим фоном інвертуються під темну тему; alt="" — зміст передає заголовок картки -->
+      <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="advantages" aria-labelledby="levels-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <!-- p замість заголовка: надпис над h2 — оформлення, а не окремий рівень структури -->
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Advantages</p>
+          <h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="levels-title">Three levels of protection</h2>
+          <p class="mb-9 max-w-[560px] text-sm text-muted md:text-base">
+            Every deal passes through three independent security mechanisms — from locking the funds to arbitration.
+          </p>
+
+          <ul class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <li>
+              <article class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+                <img
+                  class="mb-4 h-12 w-12 mix-blend-screen invert hue-rotate-180 light:invert-0 light:hue-rotate-0 light:mix-blend-multiply"
+                  src="../assets/icons/icon-escrow.webp"
+                  alt=""
+                  width="48"
+                  height="48"
+                  loading="lazy"
+                  decoding="async">
+                <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Level 01</p>
+                <h3 class="mb-2 text-base font-semibold lg:text-lg">Escrow lock</h3>
+                <p class="text-muted">
+                  Instant deposit of assets into a Multisig 2-of-3 smart contract.
+                </p>
+              </article>
+            </li>
+            <li>
+              <article class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+                <img
+                  class="mb-4 h-12 w-12 mix-blend-screen invert hue-rotate-180 light:invert-0 light:hue-rotate-0 light:mix-blend-multiply"
+                  src="../assets/icons/icon-exchange.webp"
+                  alt=""
+                  width="48"
+                  height="48"
+                  loading="lazy"
+                  decoding="async">
+                <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Level 02</p>
+                <h3 class="mb-2 text-base font-semibold lg:text-lg">Direct P2P and OTC exchange</h3>
+                <p class="text-muted">
+                  Direct settlement between the parties without intermediaries, 0% fee for the buyer.
+                </p>
+              </article>
+            </li>
+            <!-- На md третя картка займає весь рядок, щоб не лишалась порожня клітинка -->
+            <li class="md:col-span-2 lg:col-span-1">
+              <article class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+                <img
+                  class="mb-4 h-12 w-12 mix-blend-screen invert hue-rotate-180 light:invert-0 light:hue-rotate-0 light:mix-blend-multiply"
+                  src="../assets/icons/icon-shield.webp"
+                  alt=""
+                  width="48"
+                  height="48"
+                  loading="lazy"
+                  decoding="async">
+                <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Level 03</p>
+                <h3 class="mb-2 text-base font-semibold lg:text-lg">Same-Name protection and arbitration</h3>
+                <p class="text-muted">
+                  Matching card and account holder names, and dispute review on 24–48-hour timers.
+                </p>
+              </article>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Послуги (ЛР №6): компонент Card на Tailwind.
+           Сітка 1 → 2 → 3 колонки без фіксованої ширини карток; ul — бо це перелік однотипних карток.
+           Кожна картка — article з власним h3 (aria-labelledby); ціна й умови — у dl (пари «назва — значення») -->
+      <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="services" aria-labelledby="services-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Services</p>
+          <h2 class="mb-3 scroll-mt-20 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="services-title">
+            Services for every type of deal
+          </h2>
+          <p class="mb-9 max-w-[560px] text-sm text-muted md:text-base">
+            From a one-off P2P exchange to an API for exchanges — every deal goes through escrow, verification and arbitration.
+          </p>
+
+          <ul class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <li>
+              <article class="group flex flex-col overflow-hidden h-full rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-within:border-primary/40 focus-within:shadow-card-hover" aria-labelledby="svc-p2p">
+                <div class="flex flex-1 flex-col p-5">
+                  <p class="font-mono text-2xs uppercase tracking-caps text-primary-light">P2P</p>
+                  <h3 class="mt-2 scroll-mt-20 text-base font-semibold leading-snug text-ink lg:text-lg" id="svc-p2p">P2P USDT/UAH exchange</h3>
+                  <p class="flex-1 mt-2 text-sm text-muted">Buy and sell USDT for hryvnias from card to card. The seller's USDT is locked in escrow until you confirm payment.</p>
+                  <dl class="space-y-1.5 mt-4 border-t pt-4 text-xs border-line">
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <dt class="text-muted">Fee</dt>
+                    <dd class="ml-auto whitespace-nowrap text-right font-mono text-sm font-bold text-ink">0.5%</dd>
+                  </div>
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <dt class="text-muted">Limit</dt>
+                    <dd class="ml-auto whitespace-nowrap text-right font-mono text-sm font-bold text-ink">up to 10,000 USDT</dd>
+                  </div>
+                  </dl>
+                  <a class="mt-5 w-full inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-line text-ink hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:ring-primary focus-visible:ring-offset-surface" href="exchange.html">
+                    Start a P2P deal
+                    <i class="fa-solid fa-arrow-right text-xs transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </article>
+            </li>
+            <li>
+              <article class="group flex flex-col overflow-hidden h-full rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-within:border-primary/40 focus-within:shadow-card-hover" aria-labelledby="svc-otc">
+                <div class="flex flex-1 flex-col p-5">
+                  <p class="font-mono text-2xs uppercase tracking-caps text-primary-light">OTC</p>
+                  <h3 class="mt-2 scroll-mt-20 text-base font-semibold leading-snug text-ink lg:text-lg" id="svc-otc">OTC deals for large volumes</h3>
+                  <p class="flex-1 mt-2 text-sm text-muted">Exchange from 10,000 USDT at a rate locked for 15 minutes. A personal manager supports the deal from request to release.</p>
+                  <dl class="space-y-1.5 mt-4 border-t pt-4 text-xs border-line">
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <dt class="text-muted">Fee</dt>
+                    <dd class="ml-auto whitespace-nowrap text-right font-mono text-sm font-bold text-ink">0.3%</dd>
+                  </div>
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <dt class="text-muted">Volume</dt>
+                    <dd class="ml-auto whitespace-nowrap text-right font-mono text-sm font-bold text-ink">10 000 – 250 000 USDT</dd>
+                  </div>
+                  </dl>
+                  <a class="mt-5 w-full inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-line text-ink hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:ring-primary focus-visible:ring-offset-surface" href="exchange.html">
+                    Request an OTC deal
+                    <i class="fa-solid fa-arrow-right text-xs transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </article>
+            </li>
+            <li>
+              <article class="group flex flex-col overflow-hidden h-full rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-within:border-primary/40 focus-within:shadow-card-hover" aria-labelledby="svc-multisig">
+                <div class="flex flex-1 flex-col p-5">
+                  <p class="font-mono text-2xs uppercase tracking-caps text-primary-light">Security</p>
+                  <h3 class="mt-2 scroll-mt-20 text-base font-semibold leading-snug text-ink lg:text-lg" id="svc-multisig">Multisig escrow 2-of-3</h3>
+                  <p class="flex-1 mt-2 text-sm text-muted">The funds sit in a multisignature wallet. A release needs 2 of 3 signatures — buyer, seller and arbitrator — so no party can withdraw them alone.</p>
+                  <dl class="space-y-1.5 mt-4 border-t pt-4 text-xs border-line">
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <dt class="text-muted">Cost</dt>
+                    <dd class="ml-auto whitespace-nowrap text-right font-mono text-sm font-bold text-ink">included in the plan</dd>
+                  </div>
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <dt class="text-muted">Networks</dt>
+                    <dd class="ml-auto whitespace-nowrap text-right font-mono text-sm font-bold text-ink">TRC-20 · ERC-20 · BEP-20</dd>
+                  </div>
+                  </dl>
+                  <a class="mt-5 w-full inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-line text-ink hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:ring-primary focus-visible:ring-offset-surface" href="faq.html#funds">
+                    How escrow works
+                    <i class="fa-solid fa-arrow-right text-xs transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </article>
+            </li>
+            <li>
+              <article class="group flex flex-col overflow-hidden h-full rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-within:border-primary/40 focus-within:shadow-card-hover" aria-labelledby="svc-same-name">
+                <div class="flex flex-1 flex-col p-5">
+                  <p class="font-mono text-2xs uppercase tracking-caps text-primary-light">Security</p>
+                  <h3 class="mt-2 scroll-mt-20 text-base font-semibold leading-snug text-ink lg:text-lg" id="svc-same-name">Same-Name verification</h3>
+                  <p class="flex-1 mt-2 text-sm text-muted">The system matches the card holder's name with the verified profile. The deal won't accept payment from someone else's card — this cuts off “third-party” schemes.</p>
+                  <dl class="space-y-1.5 mt-4 border-t pt-4 text-xs border-line">
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <dt class="text-muted">Cost</dt>
+                    <dd class="ml-auto whitespace-nowrap text-right font-mono text-sm font-bold text-ink">free</dd>
+                  </div>
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <dt class="text-muted">Check</dt>
+                    <dd class="ml-auto whitespace-nowrap text-right font-mono text-sm font-bold text-ink">in every deal</dd>
+                  </div>
+                  </dl>
+                  <a class="mt-5 w-full inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-line text-ink hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:ring-primary focus-visible:ring-offset-surface" href="faq.html#legal">
+                    About verification
+                    <i class="fa-solid fa-arrow-right text-xs transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </article>
+            </li>
+            <li>
+              <article class="group flex flex-col overflow-hidden h-full rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-within:border-primary/40 focus-within:shadow-card-hover" aria-labelledby="svc-arbitrage">
+                <div class="flex flex-1 flex-col p-5">
+                  <p class="font-mono text-2xs uppercase tracking-caps text-primary-light">Protection</p>
+                  <h3 class="mt-2 scroll-mt-20 text-base font-semibold leading-snug text-ink lg:text-lg" id="svc-arbitrage">Independent arbitration</h3>
+                  <p class="flex-1 mt-2 text-sm text-muted">If payment didn't arrive or the counterparty disappeared, an arbitrator reviews the dispute using the deal chat and bank statements. The funds stay in escrow the whole time.</p>
+                  <dl class="space-y-1.5 mt-4 border-t pt-4 text-xs border-line">
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <dt class="text-muted">Cost</dt>
+                    <dd class="ml-auto whitespace-nowrap text-right font-mono text-sm font-bold text-ink">free</dd>
+                  </div>
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <dt class="text-muted">Decision</dt>
+                    <dd class="ml-auto whitespace-nowrap text-right font-mono text-sm font-bold text-ink">24–48 h</dd>
+                  </div>
+                  </dl>
+                  <a class="mt-5 w-full inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-line text-ink hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:ring-primary focus-visible:ring-offset-surface" href="faq.html#arbitration">
+                    Arbitration rules
+                    <i class="fa-solid fa-arrow-right text-xs transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </article>
+            </li>
+            <li>
+              <article class="group flex flex-col overflow-hidden h-full rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-within:border-primary/40 focus-within:shadow-card-hover" aria-labelledby="svc-api">
+                <div class="flex flex-1 flex-col p-5">
+                  <p class="font-mono text-2xs uppercase tracking-caps text-primary-light">B2B</p>
+                  <h3 class="mt-2 scroll-mt-20 text-base font-semibold leading-snug text-ink lg:text-lg" id="svc-api">API for exchanges and merchants</h3>
+                  <p class="flex-1 mt-2 text-sm text-muted">Create escrow deals right from your platform: REST API, deal status webhooks, custom SLAs and reporting.</p>
+                  <dl class="space-y-1.5 mt-4 border-t pt-4 text-xs border-line">
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <dt class="text-muted">Fee</dt>
+                    <dd class="ml-auto whitespace-nowrap text-right font-mono text-sm font-bold text-ink">from 0.15%</dd>
+                  </div>
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <dt class="text-muted">Volume</dt>
+                    <dd class="ml-auto whitespace-nowrap text-right font-mono text-sm font-bold text-ink">from 250,000 USDT</dd>
+                  </div>
+                  </dl>
+                  <a class="mt-5 w-full inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-line text-ink hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:ring-primary focus-visible:ring-offset-surface" href="docs.html#api">
+                    Get API access
+                    <i class="fa-solid fa-arrow-right text-xs transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </article>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="border-b py-12 md:py-16 lg:py-20 border-line" aria-labelledby="compare-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Comparison</p>
+          <h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="compare-title">Why traders choose EQUILOCK</h2>
+
+          <!-- Обгортка з прокруткою на mobile; tabindex дає змогу гортати таблицю з клавіатури.
+               relative — щоб overflow обрізав і приховані sr-only підписи -->
+          <div
+            class="relative overflow-x-auto mt-6 border rounded-card border-line bg-surface"
+            role="region"
+            aria-labelledby="compare-title"
+            tabindex="0"
+          >
+            <!-- table: дані справді табличні; th + scope зв'язують клітинки із заголовками.
+                 Відступи й лінії клітинок — у style.css (.compare): інакше ті самі класи на 40+ клітинках -->
+            <table class="compare w-full min-w-[640px] text-sm">
+              <caption class="sr-only">
+                Comparison of EQUILOCK with classic P2P exchanges and Telegram chats
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Criterion</th>
+                  <th scope="col" class="text-primary-light bg-primary/[.06]">EQUILOCK Guarantor</th>
+                  <th scope="col">Classic P2P exchanges</th>
+                  <th scope="col">Telegram chats</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Іконки ✓ ✕ — приховані (aria-hidden), їх значення продубльоване текстом для читачів екрана -->
+                <tr>
+                  <th scope="row">Risk of blocks under financial monitoring (115-FZ)</th>
+                  <td class="bg-primary/[.06]">
+                    <i class="fa-solid fa-check fa-fw text-success" aria-hidden="true"></i><span class="sr-only">Yes.</span>
+                    <span class="block text-xs text-muted">Same-Name check</span>
+                  </td>
+                  <td>
+                    <i class="fa-solid fa-minus fa-fw text-muted" aria-hidden="true"></i><span class="sr-only">Partly.</span>
+                    <span class="block text-xs text-muted">Frequent card blocks</span>
+                  </td>
+                  <td>
+                    <i class="fa-solid fa-xmark fa-fw text-danger" aria-hidden="true"></i><span class="sr-only">No.</span>
+                    <span class="block text-xs text-muted">No control</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Multisig 2-of-3 escrow</th>
+                  <td class="bg-primary/[.06]">
+                    <i class="fa-solid fa-check fa-fw text-success" aria-hidden="true"></i><span class="sr-only">Yes</span>
+                  </td>
+                  <td>
+                    <i class="fa-solid fa-minus fa-fw text-muted" aria-hidden="true"></i><span class="sr-only">Partly.</span>
+                    <span class="block text-xs text-muted">Custodial</span>
+                  </td>
+                  <td>
+                    <i class="fa-solid fa-xmark fa-fw text-danger" aria-hidden="true"></i><span class="sr-only">No</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Independent arbitration</th>
+                  <td class="bg-primary/[.06]">
+                    <i class="fa-solid fa-check fa-fw text-success" aria-hidden="true"></i><span class="sr-only">Yes.</span>
+                    <span class="block text-xs text-muted">One-click freeze</span>
+                  </td>
+                  <td>
+                    <i class="fa-solid fa-minus fa-fw text-muted" aria-hidden="true"></i><span class="sr-only">Partly.</span>
+                    <span class="block text-xs text-muted">Up to 7 days</span>
+                  </td>
+                  <td>
+                    <i class="fa-solid fa-xmark fa-fw text-danger" aria-hidden="true"></i><span class="sr-only">No.</span>
+                    <span class="block text-xs text-muted">Guarantor's word</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Rate lock</th>
+                  <td class="bg-primary/[.06]">
+                    <i class="fa-solid fa-check fa-fw text-success" aria-hidden="true"></i><span class="sr-only">Yes.</span>
+                    <span class="block text-xs text-muted">15-min timer</span>
+                  </td>
+                  <td>
+                    <i class="fa-solid fa-minus fa-fw text-muted" aria-hidden="true"></i><span class="sr-only">Partly</span>
+                  </td>
+                  <td>
+                    <i class="fa-solid fa-xmark fa-fw text-danger" aria-hidden="true"></i><span class="sr-only">No</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Fee</th>
+                  <td class="font-mono bg-primary/[.06]">0.15–0.5%</td>
+                  <td class="font-mono text-muted">0.1–1% + spread</td>
+                  <td class="font-mono text-muted">1–3%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="border-b py-12 md:py-16 lg:py-20 border-line" aria-labelledby="pricing-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Pricing</p>
+          <h2 class="mb-3 scroll-mt-20 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="pricing-title">Transparent fees with no hidden charges</h2>
+          <p class="mb-9 max-w-[560px] text-sm text-muted md:text-base">
+            The fee is charged only after the deal completes successfully. If the deal is cancelled, you pay nothing.
+          </p>
+
+          <!-- article: кожен тариф — самостійна картка зі своїм h3 -->
+          <ul class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <li>
+              <article class="relative flex flex-col h-full p-5 rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0" aria-labelledby="plan-p2p">
+                <h3 class="font-mono text-2xs font-normal uppercase tracking-caps text-muted" id="plan-p2p">P2P</h3>
+                <p class="mt-2.5 font-mono text-[30px] font-bold">0.5%</p>
+                <p class="border-b pb-4 text-xs text-muted border-line">up to 10,000 USDT</p>
+                <!-- flex-1 штовхає кнопку донизу — кнопки всіх тарифів на одній лінії. Галочки — ::before у style.css -->
+                <ul class="flex-1 mb-5 mt-4 text-sm">
+                  <li class="plan-feature py-1">Multisig 2-of-3 escrow</li>
+                  <li class="plan-feature py-1">15-min rate lock</li>
+                  <li class="plan-feature py-1">Same-Name verification</li>
+                </ul>
+                <a class="w-full inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-line text-ink hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:ring-primary focus-visible:ring-offset-surface" href="#exchange-title">Choose P2P</a>
+              </article>
+            </li>
+            <li>
+              <article class="relative flex flex-col h-full p-5 rounded-card border border-primary bg-surface shadow-featured transition duration-200 ease-out hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0" aria-labelledby="plan-otc">
+                <p class="absolute -top-2.5 left-4 px-2.5 py-0.5 text-3xs font-bold uppercase text-white rounded-full bg-primary-dark">Popular</p>
+                <h3 class="font-mono text-2xs font-normal uppercase tracking-caps text-muted" id="plan-otc">OTC</h3>
+                <p class="mt-2.5 font-mono text-[30px] font-bold">0.3%</p>
+                <p class="border-b pb-4 text-xs text-muted border-line">10 000 – 250 000 USDT</p>
+                <!-- flex-1 штовхає кнопку донизу — кнопки всіх тарифів на одній лінії. Галочки — ::before у style.css -->
+                <ul class="flex-1 mb-5 mt-4 text-sm">
+                  <li class="plan-feature py-1">Everything in P2P</li>
+                  <li class="plan-feature py-1">Personal manager</li>
+                  <li class="plan-feature py-1">Priority arbitration within 2 h</li>
+                </ul>
+                <a class="w-full inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-transparent bg-primary-dark text-white hover:bg-primary-hover hover:shadow-glow active:shadow-none focus-visible:ring-primary focus-visible:ring-offset-surface" href="#exchange-title">Choose OTC</a>
+              </article>
+            </li>
+            <li>
+              <article class="relative flex flex-col h-full p-5 rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0" aria-labelledby="plan-inst">
+                <h3 class="font-mono text-2xs font-normal uppercase tracking-caps text-muted" id="plan-inst">Institutional</h3>
+                <p class="mt-2.5 font-mono text-[30px] font-bold">from 0.15%</p>
+                <p class="border-b pb-4 text-xs text-muted border-line">from 250,000 USDT</p>
+                <!-- flex-1 штовхає кнопку донизу — кнопки всіх тарифів на одній лінії. Галочки — ::before у style.css -->
+                <ul class="flex-1 mb-5 mt-4 text-sm">
+                  <li class="plan-feature py-1">Everything in OTC</li>
+                  <li class="plan-feature py-1">API and webhooks</li>
+                  <li class="plan-feature py-1">Custom SLAs and reporting</li>
+                </ul>
+                <a class="w-full inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-line text-ink hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:ring-primary focus-visible:ring-offset-surface" href="#exchange-title">Choose Institutional</a>
+              </article>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ЦИФРИ: параметри з правил платформи (тарифи, ескроу, арбітраж), а не маркетингова статистика.
+           dl: значення (dd) і його назва (dt); order-* ставить число першим візуально, не змінюючи порядок у DOM -->
+      <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="facts" aria-labelledby="facts-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Numbers</p>
+          <h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="facts-title">Deal terms in numbers</h2>
+          <p class="mb-9 max-w-[560px] text-sm text-muted md:text-base">
+            These values are built into the rules of every deal — you can see them before you lock any funds.
+          </p>
+
+          <dl class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div class="flex flex-col h-full p-5 rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <dt class="order-2 mt-1 text-sm font-semibold">fee for the buyer</dt>
+              <dd class="order-1 font-mono text-3xl font-bold text-primary">0%</dd>
+              <dd class="order-3 mt-2 text-sm text-muted">The guarantor fee is charged only after the deal completes successfully.</dd>
+            </div>
+            <div class="flex flex-col h-full p-5 rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <dt class="order-2 mt-1 text-sm font-semibold">P2P deal fee</dt>
+              <dd class="order-1 font-mono text-3xl font-bold text-primary">0.5%</dd>
+              <dd class="order-3 mt-2 text-sm text-muted">For deals up to 10,000 USDT. OTC — 0.3%, Institutional — from 0.15%.</dd>
+            </div>
+            <div class="flex flex-col h-full p-5 rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <dt class="order-2 mt-1 text-sm font-semibold">signatures to withdraw funds</dt>
+              <dd class="order-1 font-mono text-3xl font-bold text-primary">2 of 3</dd>
+              <dd class="order-3 mt-2 text-sm text-muted">Buyer, seller and arbitrator — no party can withdraw the funds alone.</dd>
+            </div>
+            <div class="flex flex-col h-full p-5 rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <dt class="order-2 mt-1 text-sm font-semibold">rate lock</dt>
+              <dd class="order-1 font-mono text-3xl font-bold text-primary">15 min</dd>
+              <dd class="order-3 mt-2 text-sm text-muted">The rate won't change while you're making the payment.</dd>
+            </div>
+            <div class="flex flex-col h-full p-5 rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <dt class="order-2 mt-1 text-sm font-semibold">for the arbitrator's decision</dt>
+              <dd class="order-1 font-mono text-3xl font-bold text-primary">24–48 h</dd>
+              <dd class="order-3 mt-2 text-sm text-muted">The funds stay locked in escrow for the entire dispute review.</dd>
+            </div>
+            <div class="flex flex-col h-full p-5 rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <dt class="order-2 mt-1 text-sm font-semibold">USDT networks</dt>
+              <dd class="order-1 font-mono text-3xl font-bold text-primary">3</dd>
+              <dd class="order-3 mt-2 font-mono text-sm text-muted">TRC-20 · ERC-20 · BEP-20</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="border-b py-12 md:py-16 lg:py-20 border-line" aria-labelledby="status-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <div class="mx-auto max-w-[480px] p-5 md:p-6 text-sm rounded-card border border-line bg-surface">
+            <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Quick check</p>
+            <h2 class="mb-1 text-xl font-bold leading-tight md:text-2xl" id="status-title">
+              Check a deal's status
+            </h2>
+            <p class="text-muted">
+              Enter the deal number to see its current stage in real time.
+            </p>
+            <!-- form role="search": пошук угоди за номером; label прихований візуально, але доступний читачам екрана -->
+            <form class="flex flex-col gap-2 md:flex-row mb-2.5 mt-4" role="search" action="status.html" method="get">
+              <div class="flex flex-1 items-center gap-2 border px-3 rounded-ui border-line bg-page transition-colors duration-200 focus-within:border-primary">
+                <span class="font-mono text-muted" aria-hidden="true">#</span>
+                <label class="sr-only" for="deal-id">Deal number</label>
+                <input
+                  class="min-h-[44px] w-full border-0 py-2.5 font-mono placeholder:text-muted bg-transparent outline-none"
+                  type="text"
+                  id="deal-id"
+                  name="deal"
+                  placeholder="EQ-84920"
+                  pattern="EQ-[0-9]{5}"
+                  autocomplete="off">
+              </div>
+              <button class="w-full md:w-auto inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-transparent bg-primary-dark text-white hover:bg-primary-hover hover:shadow-glow active:shadow-none focus-visible:ring-primary focus-visible:ring-offset-surface" type="submit">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                Check
+              </button>
+            </form>
+            <p class="font-mono text-3xs text-muted">
+              Demo numbers: EQ-84920 · EQ-77301 · EQ-90112
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="border-b py-12 md:py-16 lg:py-20 border-line" aria-labelledby="faq-title">
+        <div class="grid gap-12 md:grid-cols-[1fr_1.4fr] mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <div>
+            <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">FAQ</p>
+            <h2 class="mb-3 scroll-mt-20 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="faq-title">Frequently asked questions</h2>
+            <p class="text-muted">Didn't find an answer? We reply 24/7.</p>
+            <a class="mt-4 w-full md:w-auto inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-line text-ink hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:ring-primary focus-visible:ring-offset-page" href="contacts.html">
+              <i class="fa-regular fa-comment" aria-hidden="true"></i>
+              Contact support
+            </a>
+          </div>
+          <!-- details/summary: нативний акордеон без JavaScript, доступний з клавіатури.
+               «+» і його поворот — псевдоелемент ::after у style.css (.faq-item) -->
+          <div>
+            <details class="faq-item mb-2 border text-sm rounded-ui border-line bg-surface transition-colors duration-200 hover:border-primary/40 open:border-primary/40">
+              <summary class="flex justify-between gap-4 px-4 py-3.5 list-none cursor-pointer rounded-ui focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">What is escrow and why is it needed?</summary>
+              <p class="px-4 pb-3.5 text-sm text-muted">
+                Escrow is conditional holding of funds. The seller's USDT is locked in a smart contract and goes to the buyer only after payment is confirmed, so neither party can disappear with the money.
+              </p>
+            </details>
+            <details class="faq-item mb-2 border text-sm rounded-ui border-line bg-surface transition-colors duration-200 hover:border-primary/40 open:border-primary/40">
+              <summary class="flex justify-between gap-4 px-4 py-3.5 list-none cursor-pointer rounded-ui focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">Who holds the keys to the multisig address?</summary>
+              <p class="px-4 pb-3.5 text-sm text-muted">
+                The three keys belong to the buyer, the seller and the arbitrator. A payout needs two of the three signatures, so the platform can't manage the funds on its own.
+              </p>
+            </details>
+            <details class="faq-item mb-2 border text-sm rounded-ui border-line bg-surface transition-colors duration-200 hover:border-primary/40 open:border-primary/40">
+              <summary class="flex justify-between gap-4 px-4 py-3.5 list-none cursor-pointer rounded-ui focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">What happens if the counterparty doesn't pay?</summary>
+              <p class="px-4 pb-3.5 text-sm text-muted">
+                If payment doesn't arrive before the timer runs out, the deal is cancelled and the USDT is returned to the seller. Disputed cases are reviewed by arbitration.
+              </p>
+            </details>
+            <details class="faq-item mb-2 border text-sm rounded-ui border-line bg-surface transition-colors duration-200 hover:border-primary/40 open:border-primary/40">
+              <summary class="flex justify-between gap-4 px-4 py-3.5 list-none cursor-pointer rounded-ui focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">How does the same-name rule work?</summary>
+              <p class="px-4 pb-3.5 text-sm text-muted">
+                The payment must come from an account whose owner matches the verified deal participant. Transfers from other people's cards are rejected automatically.
+              </p>
+            </details>
+            <details class="faq-item mb-2 border text-sm rounded-ui border-line bg-surface transition-colors duration-200 hover:border-primary/40 open:border-primary/40">
+              <summary class="flex justify-between gap-4 px-4 py-3.5 list-none cursor-pointer rounded-ui focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">Which networks are supported?</summary>
+              <p class="px-4 pb-3.5 text-sm text-muted">
+                TRC-20, ERC-20 and BEP-20.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="border-b py-12 md:py-16 lg:py-20 border-line" aria-labelledby="reviews-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Reviews</p>
+          <h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="reviews-title">What traders say</h2>
+
+          <!-- figure + blockquote + figcaption: цитата та її автор.
+               Зірки приховані від читачів екрана, натомість озвучується текстова оцінка -->
+          <ul class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-6">
+            <li>
+              <figure class="flex flex-col h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+                <div class="flex items-center justify-between gap-2">
+                  <p class="text-xs text-primary">
+                    <span class="inline-flex gap-0.5" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+                    <span class="sr-only">Rating: 5 out of 5</span>
+                  </p>
+                </div>
+                <blockquote class="flex-1 mb-4 mt-2.5">
+                  <p>
+                    “I used to work through Telegram guarantors and lost money twice. Here I see every deal status and know the USDT is locked until I pay.”
+                  </p>
+                </blockquote>
+                <figcaption class="flex items-end justify-between gap-3 border-t pt-3 border-line">
+                  <div>
+                    <p class="font-semibold">Andrii K.</p>
+                    <p class="text-xs text-muted">P2P trader, Kyiv</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-xs text-muted">
+                      <i class="fa-solid fa-shield-halved text-success" aria-hidden="true"></i>
+                      Protected
+                    </p>
+                    <p class="font-mono text-success">18 400 USDT</p>
+                  </div>
+                </figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure class="flex flex-col h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+                <div class="flex items-center justify-between gap-2">
+                  <p class="text-xs text-primary">
+                    <span class="inline-flex gap-0.5" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+                    <span class="sr-only">Rating: 5 out of 5</span>
+                  </p>
+                </div>
+                <blockquote class="flex-1 mb-4 mt-2.5">
+                  <p>
+                    “A rate lock with a timer is exactly what was missing. No more ‘the rate changed, pay extra’. The release came a minute after confirmation.”
+                  </p>
+                </blockquote>
+                <figcaption class="flex items-end justify-between gap-3 border-t pt-3 border-line">
+                  <div>
+                    <p class="font-semibold">Olena V.</p>
+                    <p class="text-xs text-muted">OTC client, Lviv</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-xs text-muted">
+                      <i class="fa-solid fa-shield-halved text-success" aria-hidden="true"></i>
+                      Protected
+                    </p>
+                    <p class="font-mono text-success">42 000 USDT</p>
+                  </div>
+                </figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure class="flex flex-col h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+                <div class="flex items-center justify-between gap-2">
+                  <p class="text-xs text-primary">
+                    <span class="inline-flex gap-0.5" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+                    <span class="sr-only">Rating: 5 out of 5</span>
+                  </p>
+                </div>
+                <blockquote class="flex-1 mb-4 mt-2.5">
+                  <p>
+                    “Once a counterparty tried to pay from someone else's card — the system blocked it right away. Arbitration sorted it out in a couple of hours and the funds came back.”
+                  </p>
+                </blockquote>
+                <figcaption class="flex items-end justify-between gap-3 border-t pt-3 border-line">
+                  <div>
+                    <p class="font-semibold">Maksym T.</p>
+                    <p class="text-xs text-muted">Merchant, Odesa</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-xs text-muted">
+                      <i class="fa-solid fa-shield-halved text-success" aria-hidden="true"></i>
+                      Protected
+                    </p>
+                    <p class="font-mono text-success">7 250 USDT</p>
+                  </div>
+                </figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===== ЛОКАЦІЯ (Google Maps) =====
+           Карта (Rue du Conseil-Général 4, Женева) завантажується лише після кнопки «Показати карту» — js/embeds.js створює iframe.
+           Контейнер адаптивний: 4:3 на телефоні, 16:9 від md. Рамку iframe прибирає клас border-0 — без інлайн-стилю з наданого коду карти. -->
+      <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="location" aria-labelledby="location-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Location</p>
+          <h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="location-title">Location on the map</h2>
+          <p class="mb-9 max-w-[560px] text-sm text-muted md:text-base">
+            EQUILOCK location on Google Maps. Other ways to reach us are in the page footer.
+          </p>
+
+          <figure>
+            <div class="relative grid place-items-center overflow-hidden w-full rounded-card border border-line bg-surface aspect-[4/3] md:aspect-video" data-embed-frame>
+              <!-- Прев'ю до натискання: локальне зображення (сторінка ще не звертається до зовнішнього сервісу); затемнення — щоб кнопку й підказку було добре видно -->
+              <img
+                class="absolute inset-0 h-full w-full object-cover"
+                src="../assets/images/map-preview-1280.webp"
+                srcset="../assets/images/map-preview-640.webp 640w, ../assets/images/map-preview-1280.webp 1280w"
+                sizes="(min-width: 1056px) 992px, calc(100vw - 32px)"
+                alt=""
+                width="1280"
+                height="720"
+                loading="lazy"
+                decoding="async">
+              <div class="absolute inset-0 bg-page/70" aria-hidden="true"></div>
+              <div class="relative flex flex-col items-center gap-3 p-5 text-center">
+                <button
+                  class="inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-6 py-3 text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-transparent bg-primary-dark text-white hover:bg-primary-hover hover:shadow-glow active:shadow-none focus-visible:ring-primary focus-visible:ring-offset-surface"
+                  type="button"
+                  data-embed-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2761.5050703295533!2d6.14027807665552!3d46.20040678401719!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478c652a547a3c31%3A0xa15f3cb91dacae51!2zUnVlIGR1IENvbnNlaWwtR8OpbsOpcmFsIDQsIDEyMDQgR2Vuw6h2ZSwg0KjQstC10LnRhtCw0YDRltGP!5e0!3m2!1suk!2sua!4v1793621431707!5m2!1suk!2sua"
+                  data-embed-title="EQUILOCK location on Google Maps: Rue du Conseil-Général 4, 1204 Geneva"
+                >
+                  <i class="fa-solid fa-map" aria-hidden="true"></i>
+                  Show the map
+                </button>
+                <p class="text-xs font-medium text-ink">The map loads from Google Maps only after you click.</p>
+              </div>
+            </div>
+            <figcaption class="flex flex-col gap-1 mt-3 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+              <span>EQUILOCK location on the Google Maps map. Preview: © <a class="text-primary-light underline decoration-primary underline-offset-4 hover:decoration-2 rounded-ui" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap<span class="sr-only"> (opens in a new tab)</span></a> contributors</span>
+              <a class="inline-flex items-center gap-1.5 min-h-[44px] font-semibold text-ink underline decoration-primary underline-offset-4 rounded-ui transition duration-200 ease-out hover:decoration-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:ring-offset-page" href="https://maps.app.goo.gl/ZXjXys1hDinUjdXG6" target="_blank" rel="noopener noreferrer">
+                Open in Google Maps
+                <i class="fa-solid fa-arrow-up-right-from-square text-xs" aria-hidden="true"></i>
+                <span class="sr-only">(opens in a new tab)</span>
+              </a>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+      <!-- ===== /ЛОКАЦІЯ ===== -->
+
+      <!-- CTA за прототипом сторінки «Про нас»: фінальний заклик перед підвалом -->
+      <section class="py-6 md:py-16 lg:py-20" aria-labelledby="cta-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <!-- Брендовий банер: текст ліворуч, кнопки праворуч; flex-wrap переносить кнопки під текст.
+               На mobile вертикальні відступи щільніші (секція py-6, проміжки gap-3 / gap-2, h2 mb-1.5); від md — як раніше.
+               Фокус: біле кільце 4px з фіолетовим проміжком — помітне на брендовому фоні й на білій кнопці -->
+          <div class="flex flex-wrap items-center justify-between gap-3 md:gap-6 p-4 md:p-6 lg:p-8 text-white rounded-banner bg-primary-dark">
+            <div class="flex-[1_1_280px] max-w-[560px]">
+              <h2 class="flex items-start gap-2 mb-1.5 md:mb-2 text-xl font-bold leading-tight md:text-2xl lg:text-3xl" id="cta-title">
+                <i class="fa-solid fa-gavel mt-1 text-base" aria-hidden="true"></i>
+                Test the algorithm on your own deal
+              </h2>
+              <p class="text-sm text-white/80">
+                0% fee for the buyer. The seller's assets stay locked until payment is confirmed.
+              </p>
+            </div>
+            <div class="flex flex-col gap-2 md:gap-2.5 md:flex-row w-full md:w-auto">
+              <a class="w-full md:w-auto inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-4 focus-visible:ring-offset-2 border-transparent bg-white text-primary-dark hover:bg-primary-tint hover:shadow-card-hover focus-visible:ring-white focus-visible:ring-offset-primary-dark" href="exchange.html">Start exchange</a>
+              <a class="w-full md:w-auto inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-5 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-4 focus-visible:ring-offset-2 border-white/50 text-white hover:border-white hover:bg-white/[.12] hover:shadow-card-hover focus-visible:ring-white focus-visible:ring-offset-primary-dark" href="faq.html">Legal framework</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- footer: орієнтир «підвал сайту» (role=contentinfo). ЛР №6 — Tailwind, у парі з хедером:
+         ті самі кольори, рамки border-line, радіуси й стани фокуса.
+         Заголовки груп — h2 (ієрархія не перескакує рівні), кожна група посилань — окремий nav -->
+    <footer class="border-t text-sm text-muted border-line bg-surface">
+      <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+        <!-- SaaS: підписка на оновлення. Без JS — стандартна HTML-валідація (required, type=email) -->
+        <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between border-b py-10 border-line">
+          <div class="max-w-[440px]">
+            <h2 class="text-base font-semibold text-ink md:text-lg" id="subscribe-title">Security news and platform updates</h2>
+            <p class="mt-1">Once a month: new networks, pricing changes and tips on avoiding scams.</p>
+          </div>
+          <form class="w-full lg:max-w-[440px]" action="thanks.html" method="get" aria-labelledby="subscribe-title">
+            <div class="flex flex-col gap-2 md:flex-row">
+              <label class="sr-only" for="subscribe-email">Email</label>
+              <input
+                class="flex-1 min-h-[44px] w-full border px-3.5 text-sm text-ink placeholder:text-muted rounded-ui border-line bg-page transition-colors duration-200 hover:border-primary/40 focus:border-primary focus:outline-none focus-visible:outline-none [&:not(:placeholder-shown):invalid]:border-danger"
+                id="subscribe-email"
+                name="email"
+                type="email"
+                placeholder="Your email"
+                autocomplete="email"
+                required
+                aria-describedby="subscribe-hint">
+              <button
+                class="w-full md:w-auto inline-flex items-center justify-center gap-1.5 min-h-[44px] border whitespace-nowrap font-semibold leading-tight rounded-ui transition duration-200 ease-out active:translate-y-px motion-reduce:transition-none px-6 py-3 text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 border-transparent bg-primary-dark text-white hover:bg-primary-hover hover:shadow-glow active:shadow-none focus-visible:ring-primary focus-visible:ring-offset-surface disabled:pointer-events-none disabled:opacity-50"
+                type="submit"
+              >
+                Subscribe
+              </button>
+            </div>
+            <p class="mt-2 text-xs" id="subscribe-hint">No spam. Unsubscribe in one click.</p>
+          </form>
+        </div>
+
+        <!-- Сітка колонок: 1 → 2 → 4 -->
+        <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4 py-12">
+          <!-- 1. Логотип і опис -->
+          <div>
+            <a
+              class="inline-flex items-center gap-2 min-h-[44px] text-ink rounded-ui transition-opacity duration-200 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              href="index.html"
+              aria-label="EQUILOCK — home"
+            >
+              <img
+                class="h-7 w-7 mix-blend-screen invert hue-rotate-180 light:invert-0 light:hue-rotate-0 light:mix-blend-multiply"
+                src="../assets/icons/logo-mark.webp"
+                alt=""
+                width="28"
+                height="28"
+                loading="lazy"
+                decoding="async">
+              <span class="font-extrabold tracking-logo" aria-hidden="true">EQUILOCK</span>
+            </a>
+            <p class="mt-3 max-w-[280px]">
+              Escrow infrastructure for safe P2P and OTC crypto deals. Code instead of promises.
+            </p>
+            <p class="mt-4 font-mono text-xs">TRC-20 · ERC-20 · BEP-20</p>
+          </div>
+
+          <!-- 2. Навігація (дублює головне меню) -->
+          <nav aria-labelledby="f-nav">
+            <h2 class="mb-1 text-sm font-semibold text-ink" id="f-nav">Navigation</h2>
+            <ul>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="index.html" aria-current="page">Home</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="exchange.html">Start exchange</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="catalog.html">Crypto catalog</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="about.html">About us</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="#pricing-title">Pricing</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="#facts">Terms in numbers</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="faq.html">FAQ &amp; legal</a></li>
+            </ul>
+          </nav>
+
+          <!-- 3. Послуги — ведуть на картки секції «Послуги» -->
+          <nav aria-labelledby="f-services">
+            <h2 class="mb-1 text-sm font-semibold text-ink" id="f-services">Services</h2>
+            <ul>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="#svc-p2p">P2P USDT/UAH exchange</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="#svc-otc">OTC deals</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="#svc-multisig">Multisig escrow 2-of-3</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="#svc-same-name">Same-Name verification</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="#svc-arbitrage">Independent arbitration</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="#svc-api">API for exchanges and merchants</a></li>
+            </ul>
+          </nav>
+
+          <!-- 4. Контакти й соцмережі. address — контактні дані власника сайту -->
+          <div>
+            <h2 class="mb-1 text-sm font-semibold text-ink" id="f-contacts">Contacts</h2>
+            <address class="not-italic">
+              <p>
+                <a class="inline-flex items-center gap-2 min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="mailto:support@equilock.io">
+                  <i class="fa-solid fa-envelope w-4 text-center text-primary" aria-hidden="true"></i>
+                  support@equilock.io
+                </a>
+              </p>
+              <p>
+                <a class="inline-flex items-center gap-2 min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="https://t.me/" rel="noopener noreferrer" target="_blank">
+                  <i class="fa-brands fa-telegram w-4 text-center text-primary" aria-hidden="true"></i>
+                  Telegram support, 24/7
+                </a>
+              </p>
+              <p class="flex items-center gap-2 min-h-[44px]">
+                <i class="fa-solid fa-location-dot w-4 text-center text-primary" aria-hidden="true"></i>
+                Kyiv, Ukraine
+              </p>
+            </address>
+            <!-- Соцмережі: доступна назва — aria-label посилання; сам SVG декоративний (aria-hidden).
+                 Іконки: Font Awesome Free 6.7.2, CC BY 4.0 -->
+            <ul class="flex flex-wrap gap-2 mt-5" aria-label="Social media">
+                <li>
+                  <a class="inline-flex items-center justify-center h-11 w-11 border text-muted hover:text-ink rounded-ui border-line transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:ring-offset-surface motion-reduce:transition-none motion-reduce:hover:translate-y-0" href="https://t.me/" aria-label="EQUILOCK on Telegram" rel="noopener noreferrer" target="_blank">
+                    <svg class="h-[18px] w-[18px] fill-current" viewBox="0 0 496 512" aria-hidden="true" focusable="false"><path d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.107-61.51,68.335-66.746.153-.655.3-3.1-1.154-4.384s-3.59-.849-5.135-.5q-3.283.746-104.608,69.142-14.845,10.194-26.894,9.934c-8.855-.191-25.888-5.006-38.551-9.123-15.531-5.048-27.875-7.717-26.8-16.291q.84-6.7,18.45-13.7,108.446-47.248,144.628-62.3c68.872-28.647,83.183-33.623,92.511-33.789,2.052-.034,6.639.474,9.61,2.885a10.452,10.452,0,0,1,3.53,6.716A43.765,43.765,0,0,1,362.952,176.66Z"/></svg>
+                  </a>
+                </li>
+                <li>
+                  <a class="inline-flex items-center justify-center h-11 w-11 border text-muted hover:text-ink rounded-ui border-line transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:ring-offset-surface motion-reduce:transition-none motion-reduce:hover:translate-y-0" href="https://x.com/" aria-label="EQUILOCK on X (Twitter)" rel="noopener noreferrer" target="_blank">
+                    <svg class="h-[18px] w-[18px] fill-current" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+                  </a>
+                </li>
+                <li>
+                  <a class="inline-flex items-center justify-center h-11 w-11 border text-muted hover:text-ink rounded-ui border-line transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:ring-offset-surface motion-reduce:transition-none motion-reduce:hover:translate-y-0" href="https://github.com/" aria-label="EQUILOCK on GitHub" rel="noopener noreferrer" target="_blank">
+                    <svg class="h-[18px] w-[18px] fill-current" viewBox="0 0 496 512" aria-hidden="true" focusable="false"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+                  </a>
+                </li>
+                <li>
+                  <a class="inline-flex items-center justify-center h-11 w-11 border text-muted hover:text-ink rounded-ui border-line transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 hover:shadow-glow hover:shadow-primary/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:ring-offset-surface motion-reduce:transition-none motion-reduce:hover:translate-y-0" href="https://www.linkedin.com/" aria-label="EQUILOCK on LinkedIn" rel="noopener noreferrer" target="_blank">
+                    <svg class="h-[18px] w-[18px] fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+                  </a>
+                </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Нижній рядок: копірайт, юридичні посилання, статус системи -->
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between border-t py-6 text-xs border-line">
+          <p class="lg:whitespace-nowrap"><small class="text-xs">© 2026 EQUILOCK. All rights reserved.</small></p>
+          <nav aria-label="Legal information">
+            <ul class="flex flex-wrap gap-x-5">
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="terms.html">Terms of use</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="privacy.html">Privacy policy</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="aml-kyc.html">AML/KYC policy</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-ui transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="faq.html#legal">Legality and financial monitoring</a></li>
+            </ul>
+          </nav>
+          <!-- SaaS: індикатор стану сервісу. Крапка «пульсує» (animate-ping), але не при «менше анімації» -->
+          <a
+            class="inline-flex shrink-0 items-center gap-2 self-start lg:self-auto min-h-[44px] border px-3 py-1.5 whitespace-nowrap font-medium text-success rounded-full border-success/30 bg-success/[.08] transition-colors duration-200 hover:border-success/60 hover:bg-success/[.14] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            href="status.html#system"
+          >
+            <span class="relative flex h-2 w-2" aria-hidden="true">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75 motion-reduce:animate-none"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-success"></span>
+            </span>
+            System status
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

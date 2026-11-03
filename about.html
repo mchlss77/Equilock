@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Про нас — EQUILOCK</title>
+    <!-- SEO: опис сторінки для сніпета в пошуку -->
+    <meta
+      name="description"
+      content="EQUILOCK — ескроу-платформа для P2P та OTC криптоугод, де безпеку гарантує код: Multisig 2-of-3, прозорий таймлайн, Same-Name верифікація й арбітраж.">
+    <!-- Іконка вкладки з assets -->
+    <link rel="icon" type="image/png" href="assets/icons/logo-mark.png">
+    <!-- Мовні версії сторінки (для пошуковиків) -->
+    <link rel="alternate" hreflang="uk" href="about.html">
+    <link rel="alternate" hreflang="en" href="en/about.html">
+
+    <!-- Тема (темна/світла) — до стилів і без defer, щоб не було спалаху іншої теми -->
+    <script src="js/theme.js"></script>
+
+    <!-- Шрифти Manrope і JetBrains Mono — локально (assets/fonts, @font-face у css/tailwind.css).
+         preload — основний шрифт для кирилиці, щоб текст швидше отримав фірмовий шрифт -->
+    <link rel="preload" href="assets/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Font Awesome 6.7.2 — локально (assets/vendor/fontawesome); той самий файл, що був на CDN -->
+    <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
+
+    <!-- Власні стилі -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Tailwind CSS, зібраний локально з tailwind.config.js (замість Play CDN). Підключений після style.css —
+         у тому ж порядку, в якому Play CDN вставляв свої стилі -->
+    <link rel="stylesheet" href="css/tailwind.css">
+
+    <!-- Мінімальний JS для шапки: мобільне меню й dropdown (defer — після розбору HTML) -->
+    <script src="js/header.js" defer></script>
+    <!-- Рядок курсів у шапці: живі дані CoinGecko -->
+    <script src="js/ticker.js" defer></script>
+  </head>
+  <!-- Базова типографіка сторінки (раніше — body у style.css) -->
+  <body class="min-h-screen break-words font-sans text-sm leading-[1.55] text-ink antialiased md:text-base bg-page">
+    <!-- Доступність: дає змогу з клавіатури одразу перейти до основного вмісту -->
+    <a class="fixed left-4 top-3 z-[100] flex items-center min-h-[44px] px-4 py-2.5 font-semibold text-white -translate-y-[200%] rounded-ui bg-primary-dark transition-transform duration-200 focus:translate-y-0" href="#main">Перейти до основного вмісту</a>
+
+    <!-- header: орієнтир «шапка сайту» (role=banner). Липкий: -top-7 (= висота рядка курсів, 28px)
+         ховає курси при прокрутці, а панель з меню лишається видимою.
+         data-header — точка входу для js/header.js -->
+    <header class="sticky -top-7 z-10" data-header>
+      <!-- aside: курси — додаткова інформація, не пов'язана з основним вмістом -->
+      <aside
+        class="flex items-center overflow-hidden h-7 border-b px-4 md:px-6 lg:px-8 whitespace-nowrap font-mono text-2xs text-muted border-line bg-page"
+        aria-label="Поточні курси"
+        data-ticker
+      >
+        <!-- ===== РЯДОК КУРСІВ: живі дані CoinGecko (js/ticker.js), один запит на всі пари =====
+             До відповіді й при помилці — «—»; зміна за 24 год зелена/червона. BTC і ETH — у USD,
+             бо CoinGecko не підтримує USDT як валюту порівняння. Стан озвучує sr-only рядок нижче. -->
+        <ul class="flex gap-5 sm:justify-center sm:gap-10 w-full">
+          <li data-ticker-coin="tether" data-ticker-vs="uah" data-ticker-digits="2">
+            <span class="mr-1.5 font-bold text-ink">USDT/UAH</span> <span data-ticker-price>—</span> UAH
+            <span class="text-muted" data-ticker-change></span>
+          </li>
+          <li data-ticker-coin="bitcoin" data-ticker-vs="usd" data-ticker-digits="0">
+            <span class="mr-1.5 font-bold text-ink">BTC/USD</span> $<span data-ticker-price>—</span>
+            <span class="text-muted" data-ticker-change></span>
+          </li>
+          <li data-ticker-coin="ethereum" data-ticker-vs="usd" data-ticker-digits="0">
+            <span class="mr-1.5 font-bold text-ink">ETH/USD</span> $<span data-ticker-price>—</span>
+            <span class="text-muted" data-ticker-change></span>
+          </li>
+        </ul>
+        <p class="sr-only" aria-live="polite" data-ticker-status>Завантаження курсів…</p>
+        <!-- ===== /РЯДОК КУРСІВ ===== -->
+      </aside>
+
+      <div class="border-b border-line bg-page/90 backdrop-blur">
+        <!-- flex-wrap: на mobile відкрите меню (basis-full) переноситься на новий рядок під логотип -->
+        <div class="flex flex-wrap items-center gap-x-4 md:gap-x-2 lg:gap-x-3 mx-auto w-full max-w-[1056px] px-4 min-h-[60px] md:px-6 lg:px-8">
+          <a
+            class="flex shrink-0 items-center gap-2 min-h-[60px] min-w-[44px] rounded-ui transition-opacity duration-200 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            href="index.html"
+            aria-label="EQUILOCK — на головну"
+          >
+            <!-- alt="" — назва вже є в aria-label посилання; invert + hue-rotate перефарбовують логотип під темну тему.
+                 На планшеті (md…lg) лишається лише знак, щоб меню вмістилося в один рядок -->
+            <img
+              class="h-7 w-7 mix-blend-screen invert hue-rotate-180 light:invert-0 light:hue-rotate-0 light:mix-blend-multiply"
+              src="assets/icons/logo-mark.webp"
+              alt=""
+              width="28"
+              height="28">
+            <span class="md:max-lg:hidden font-extrabold tracking-logo" aria-hidden="true">EQUILOCK</span>
+          </a>
+
+          <!-- Гамбургер (лише mobile). peer — nav нижче читає його aria-expanded;
+               group — іконки всередині міняються ☰ ↔ ✕ -->
+          <button
+            class="peer group inline-flex items-center justify-center md:hidden ml-auto h-11 w-11 border text-ink rounded-ui border-line transition-colors duration-200 hover:border-primary hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            type="button"
+            aria-label="Головне меню"
+            aria-expanded="false"
+            aria-controls="main-nav"
+          >
+            <i class="fa-solid fa-bars group-aria-expanded:hidden" aria-hidden="true"></i>
+            <i class="fa-solid fa-xmark hidden group-aria-expanded:inline-block" aria-hidden="true"></i>
+          </button>
+
+          <!-- nav: на mobile прихована, доки гамбургер не має aria-expanded="true"; від md — горизонтальна.
+               aria-current позначає поточну сторінку -->
+          <nav
+            id="main-nav"
+            class="hidden basis-full md:flex md:basis-auto max-md:peer-aria-expanded:block border-t pb-4 pt-2 md:mx-auto md:border-0 md:p-0 border-line"
+            aria-label="Основна навігація"
+          >
+            <ul class="flex flex-col gap-1 md:flex-row md:items-center md:gap-0.5 lg:gap-1">
+              <li>
+                <a
+                  class="flex items-center min-h-[44px] px-3 py-2.5 md:px-1 md:py-1.5 lg:px-2 text-base text-muted md:text-[13px] lg:text-sm hover:text-ink aria-[current=page]:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:bg-elevated"
+                  href="index.html"
+                  >Головна</a
+                >
+              </li>
+              <li>
+                <a
+                  class="flex items-center min-h-[44px] px-3 py-2.5 md:px-1 md:py-1.5 lg:px-2 text-base text-muted md:text-[13px] lg:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                  href="exchange.html"
+                  >Почати обмін</a
+                >
+              </li>
+              <li>
+                <a
+                  class="flex items-center min-h-[44px] px-3 py-2.5 md:px-1 md:py-1.5 lg:px-2 text-base text-muted md:text-[13px] lg:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                  href="catalog.html"
+                  >Каталог криптовалют</a
+                >
+              </li>
+              <li>
+                <a
+                  class="flex items-center min-h-[44px] px-3 py-2.5 md:px-1 md:py-1.5 lg:px-2 text-base text-muted md:text-[13px] lg:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                  href="about.html" aria-current="page"
+                  >Про нас</a
+                >
+              </li>
+
+              <!-- Dropdown «Ресурси»: кнопка (не посилання) — вона лише відкриває список.
+                   На mobile список розгортається під кнопкою, від md — випадає панеллю -->
+              <li class="relative">
+                <button
+                  class="peer group flex items-center justify-between gap-1.5 min-h-[44px] w-full px-3 py-2.5 md:w-auto md:px-1 md:py-1.5 lg:px-2 text-base text-muted md:text-[13px] lg:text-sm hover:text-ink aria-expanded:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="resources-menu"
+                >
+                  Ресурси
+                  <i
+                    class="fa-solid fa-chevron-down text-3xs transition-transform duration-200 group-aria-expanded:rotate-180"
+                    aria-hidden="true"
+                  ></i>
+                </button>
+                <ul
+                  id="resources-menu"
+                  class="hidden md:invisible md:absolute md:right-0 md:top-full md:block md:peer-aria-expanded:visible peer-aria-expanded:block pl-3 md:mt-2 md:w-60 md:border md:p-1.5 md:translate-y-1 md:rounded-card md:border-line md:bg-surface md:opacity-0 md:shadow-float md:transition-[opacity,transform,visibility] md:duration-200 md:peer-aria-expanded:translate-y-0 md:peer-aria-expanded:opacity-100"
+                >
+                  <li>
+                    <a
+                      class="flex items-center gap-2.5 min-h-[44px] px-3 py-2.5 md:py-2 text-base text-muted md:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                      href="index.html#pricing-title"
+                    >
+                      <i class="fa-solid fa-tags w-4 text-center text-primary" aria-hidden="true"></i>
+                      Тарифи
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="flex items-center gap-2.5 min-h-[44px] px-3 py-2.5 md:py-2 text-base text-muted md:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                      href="docs.html"
+                    >
+                      <i class="fa-solid fa-book w-4 text-center text-primary" aria-hidden="true"></i>
+                      Документація
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="flex items-center gap-2.5 min-h-[44px] px-3 py-2.5 md:py-2 text-base text-muted md:text-sm hover:text-ink rounded-ui transition-colors duration-200 hover:bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:text-ink aria-[current=page]:bg-elevated"
+                      href="faq.html"
+                    >
+                      <i class="fa-solid fa-scale-balanced w-4 text-center text-primary" aria-hidden="true"></i>
+                      FAQ та юр. база
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <!-- Лише mobile: мова й CTA всередині відкритого меню -->
+              <li class="flex flex-wrap items-center gap-2 md:hidden mt-2 border-t pt-4 border-line">
+                <!-- Перемикач мови UA / EN: та сама сторінка іншою мовою (англійські — у папці en/) -->
+                <div class="flex items-center gap-0.5 border p-0.5 rounded-ui border-line" role="group" aria-label="Мова сайту">
+                  <i class="fa-solid fa-globe px-1.5 text-xs text-muted" aria-hidden="true"></i>
+                  <a class="inline-flex items-center justify-center h-10 min-w-9 px-1.5 text-xs font-semibold text-muted rounded-md transition-colors duration-200 hover:text-ink aria-[current=true]:bg-elevated aria-[current=true]:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="about.html" hreflang="uk" lang="uk" aria-current="true"><span aria-hidden="true">UA</span><span class="sr-only">Українська</span></a>
+                  <a class="inline-flex items-center justify-center h-10 min-w-9 px-1.5 text-xs font-semibold text-muted rounded-md transition-colors duration-200 hover:text-ink aria-[current=true]:bg-elevated aria-[current=true]:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="en/about.html" hreflang="en" lang="en"><span aria-hidden="true">EN</span><span class="sr-only">English</span></a>
+                </div>
+                <!-- Перемикач теми: кнопки з aria-pressed, логіка — js/theme.js -->
+                <div class="flex border p-0.5 rounded-ui border-line" role="group" aria-label="Тема оформлення" data-theme-switch>
+                  <button class="inline-flex items-center justify-center h-10 w-9 text-sm text-muted rounded-md transition-colors duration-200 hover:text-ink aria-pressed:bg-elevated aria-pressed:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" type="button" data-theme-value="light" aria-pressed="false" aria-label="Світла тема"><i class="fa-regular fa-sun" aria-hidden="true"></i></button>
+                  <button class="inline-flex items-center justify-center h-10 w-9 text-sm text-muted rounded-md transition-colors duration-200 hover:text-ink aria-pressed:bg-elevated aria-pressed:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" type="button" data-theme-value="dark" aria-pressed="true" aria-label="Темна тема"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
+                </div>
+                <a
+                  class="inline-flex basis-full items-center justify-center min-h-[44px] px-6 py-3 text-base font-semibold leading-5 text-white rounded-ui bg-primary-dark transition duration-200 ease-out hover:bg-primary-hover hover:shadow-glow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:translate-y-px active:shadow-none motion-reduce:transition-none"
+                  href="index.html#exchange-title"
+                  >Почати обмін</a
+                >
+              </li>
+            </ul>
+          </nav>
+
+          <!-- Дії праворуч (від md). Мова й перемикач теми — від lg, щоб на планшеті вмістилося меню -->
+          <div class="hidden shrink-0 items-center gap-2 md:flex">
+            <!-- Перемикач мови UA / EN: та сама сторінка іншою мовою (англійські — у папці en/) -->
+            <div class="hidden md:flex items-center gap-0.5 border p-0.5 rounded-ui border-line" role="group" aria-label="Мова сайту">
+              <a class="inline-flex items-center justify-center h-10 min-w-9 px-1.5 max-lg:aria-[current=true]:hidden text-xs font-semibold text-muted rounded-md transition-colors duration-200 hover:text-ink aria-[current=true]:bg-elevated aria-[current=true]:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="about.html" hreflang="uk" lang="uk" aria-current="true"><span aria-hidden="true">UA</span><span class="sr-only">Українська</span></a>
+              <a class="inline-flex items-center justify-center h-10 min-w-9 px-1.5 max-lg:aria-[current=true]:hidden text-xs font-semibold text-muted rounded-md transition-colors duration-200 hover:text-ink aria-[current=true]:bg-elevated aria-[current=true]:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="en/about.html" hreflang="en" lang="en"><span aria-hidden="true">EN</span><span class="sr-only">English</span></a>
+            </div>
+            <!-- Перемикач теми: кнопки з aria-pressed, логіка — js/theme.js -->
+            <div class="hidden md:flex border p-0.5 rounded-ui border-line" role="group" aria-label="Тема оформлення" data-theme-switch>
+              <button class="inline-flex items-center justify-center h-10 w-9 text-sm text-muted rounded-md max-lg:aria-pressed:hidden transition-colors duration-200 hover:text-ink aria-pressed:bg-elevated aria-pressed:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" type="button" data-theme-value="light" aria-pressed="false" aria-label="Світла тема"><i class="fa-regular fa-sun" aria-hidden="true"></i></button>
+              <button class="inline-flex items-center justify-center h-10 w-9 text-sm text-muted rounded-md max-lg:aria-pressed:hidden transition-colors duration-200 hover:text-ink aria-pressed:bg-elevated aria-pressed:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" type="button" data-theme-value="dark" aria-pressed="true" aria-label="Темна тема"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
+            </div>
+            <!-- CTA (SaaS): та сама Primary CTA Button, компактний розмір для шапки -->
+            <a
+              class="inline-flex items-center justify-center min-h-[44px] px-4 py-2 whitespace-nowrap text-sm font-semibold leading-5 text-white rounded-ui bg-primary-dark transition duration-200 ease-out hover:bg-primary-hover hover:shadow-glow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:translate-y-px active:shadow-none motion-reduce:transition-none"
+              href="index.html#exchange-title"
+              >Почати обмін</a
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- main: єдиний основний вміст сторінки -->
+    <main id="main">
+      <!-- «Про нас» за макетом _materials/Untitled-3.png і текстом з «H1 H2 CTA Блок про нас.pdf» -->
+      <section class="border-b pb-12 pt-10 md:pb-16 md:pt-12 border-line" aria-labelledby="page-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8 grid items-center gap-10 md:grid-cols-[1.2fr_1fr]">
+          <div>
+            <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Про EQUILOCK</p>
+            <h1 class="mb-3 text-3xl font-extrabold leading-[1.1] tracking-tight sm:text-4xl md:text-5xl" id="page-title">EQUILOCK — ескроу-платформа, де безпеку гарантує код</h1>
+            <p class="mt-5 border-l-2 pl-4 text-sm text-muted md:text-base border-primary">
+              Традиційні гаранти вимагають довіри до компанії. Ми пропонуємо довіру
+              до алгоритму. EQUILOCK — це захищена ескроу-інфраструктура для P2P та
+              OTC-криптоугод, яка працює за принципом
+              <strong class="font-semibold text-ink">«код замість обіцянок»</strong>.
+            </p>
+            <dl class="grid grid-cols-3 gap-4 mt-8 border-t pt-5 border-line">
+              <div class="flex flex-col-reverse">
+                <dt class="text-xs text-muted">захищено в ескроу</dt>
+                <dd class="font-mono text-lg font-bold md:text-[22px]">$48M+</dd>
+              </div>
+              <div class="flex flex-col-reverse">
+                <dt class="text-xs text-muted">завершених угод</dt>
+                <dd class="font-mono text-lg font-bold md:text-[22px]">27 400+</dd>
+              </div>
+              <div class="flex flex-col-reverse">
+                <dt class="text-xs text-muted">розгляд спору</dt>
+                <dd class="font-mono text-lg font-bold md:text-[22px]">&lt; 24 год</dd>
+              </div>
+            </dl>
+          </div>
+          <img
+            class="aspect-square object-cover w-full border rounded-card border-line"
+            src="assets/images/hero-banner-960.webp"
+              srcset="assets/images/hero-banner-640.webp 640w, assets/images/hero-banner-960.webp 960w, assets/images/hero-banner-1280.webp 1280w"
+              sizes="(min-width: 768px) 440px, calc(100vw - 32px)"
+            alt="3D-сейф зі щитом — символ коштів, захищених кодом"
+            width="960"
+            height="960"
+            fetchpriority="high">
+        </div>
+      </section>
+
+      <section class="border-b py-12 md:py-16 lg:py-20 border-line" aria-labelledby="protection-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Безпека</p>
+          <h2 class="mb-3 scroll-mt-20 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="protection-title">Як працює наш захист?</h2>
+          <p class="mb-9 max-w-[640px] text-sm text-muted md:text-base">
+            Кожен механізм працює автоматично та не залежить від людського фактору.
+          </p>
+
+          <ol class="grid gap-4 sm:grid-cols-2">
+            <li class="p-5 md:p-6 border rounded-card border-line bg-surface">
+              <div class="flex items-start justify-between gap-3 mb-4">
+                <span class="inline-flex shrink-0 items-center justify-center h-10 w-10 border text-primary rounded-ui border-primary/30 bg-primary/10" aria-hidden="true"><i class="fa-solid fa-lock"></i></span>
+                <span class="font-mono text-2xs text-muted" aria-hidden="true">01</span>
+              </div>
+              <h3 class="mb-1.5 text-base font-semibold lg:text-lg">Миттєвий Lock</h3>
+              <p class="text-sm text-muted">
+                У момент створення угоди крипта блокується в ескроу (multisig 2-of-3 /
+                смарт-контракт).
+              </p>
+              <ul class="mt-4 space-y-1.5 border-t pt-4 text-xs text-muted border-line">
+                <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"></span>Блокування &lt; 3 секунд після підтвердження мережі</li>
+                <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"></span>Сума і курс фіксуються on-chain</li>
+                <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"></span>TRC-20 · ERC-20 · BEP-20</li>
+              </ul>
+            </li>
+            <li class="p-5 md:p-6 border rounded-card border-line bg-surface">
+              <div class="flex items-start justify-between gap-3 mb-4">
+                <span class="inline-flex shrink-0 items-center justify-center h-10 w-10 border text-primary rounded-ui border-primary/30 bg-primary/10" aria-hidden="true"><i class="fa-solid fa-list-check"></i></span>
+                <span class="font-mono text-2xs text-muted" aria-hidden="true">02</span>
+              </div>
+              <h3 class="mb-1.5 text-base font-semibold lg:text-lg">Прозорий таймлайн</h3>
+              <p class="text-sm text-muted">
+                Ви та ваш контрагент бачите кожен статус у реальному часі
+                («заблоковано» → «оплачено» → «завершено»).
+              </p>
+              <ul class="mt-4 space-y-1.5 border-t pt-4 text-xs text-muted border-line">
+                <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"></span>Публічний хеш транзакції на кожному кроці</li>
+                <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"></span>Таймер оплати 15 хвилин</li>
+                <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"></span>Незмінний аудит-лог для арбітражу</li>
+              </ul>
+            </li>
+            <li class="p-5 md:p-6 border rounded-card border-line bg-surface">
+              <div class="flex items-start justify-between gap-3 mb-4">
+                <span class="inline-flex shrink-0 items-center justify-center h-10 w-10 border text-primary rounded-ui border-primary/30 bg-primary/10" aria-hidden="true"><i class="fa-solid fa-user-check"></i></span>
+                <span class="font-mono text-2xs text-muted" aria-hidden="true">03</span>
+              </div>
+              <h3 class="mb-1.5 text-base font-semibold lg:text-lg">Автоматична верифікація</h3>
+              <p class="text-sm text-muted">
+                Фіксація курсу за таймером та захист від платежів із чужих карток.
+              </p>
+              <ul class="mt-4 space-y-1.5 border-t pt-4 text-xs text-muted border-line">
+                <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"></span>Захист від схем P2P-трикутників</li>
+                <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"></span>Мінімізація ризику блокування карток</li>
+                <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"></span>Перевірка на рівні банківської виписки</li>
+              </ul>
+            </li>
+            <li class="p-5 md:p-6 border rounded-card border-line bg-surface">
+              <div class="flex items-start justify-between gap-3 mb-4">
+                <span class="inline-flex shrink-0 items-center justify-center h-10 w-10 border text-primary rounded-ui border-primary/30 bg-primary/10" aria-hidden="true"><i class="fa-solid fa-snowflake"></i></span>
+                <span class="font-mono text-2xs text-muted" aria-hidden="true">04</span>
+              </div>
+              <h3 class="mb-1.5 text-base font-semibold lg:text-lg">Миттєве заморожування при спорі</h3>
+              <p class="text-sm text-muted">
+                Кнопка «Викликати арбітраж» заморожує виплату та відкриває форму
+                подачі доказів без затримки капіталу.
+              </p>
+              <ul class="mt-4 space-y-1.5 border-t pt-4 text-xs text-muted border-line">
+                <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"></span>Заморожування одним кліком</li>
+                <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"></span>Рішення до 24 годин</li>
+                <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"></span>AI-аналіз доказів + людина-арбітр</li>
+              </ul>
+            </li>
+          </ol>
+
+          <p class="mx-auto mt-10 max-w-[640px] text-center text-base font-medium md:text-lg">
+            Ми прибрали страх із криптообміну, залишивши лише ясність, швидкість та
+            <span class="text-primary-light">100% контроль</span> над кожною гривнею та монетою.
+          </p>
+        </div>
+      </section>
+
+      <section class="border-b py-12 md:py-16 lg:py-20 border-line" aria-labelledby="architecture-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8 grid gap-10 md:grid-cols-2">
+          <div>
+            <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Технічна архітектура</p>
+            <h2 class="mb-3 scroll-mt-20 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="architecture-title">Інфраструктура, якій не потрібно довіряти</h2>
+            <p class="mb-6 text-sm text-muted md:text-base">
+              Схема ключів 2-of-3 гарантує: для виплати потрібна згода двох із трьох
+              сторін. У звичайній угоді це покупець і продавець, у спорі — арбітр і
+              сторона, на користь якої винесено рішення.
+            </p>
+            <!-- pre + code: фрагмент коду зберігає відступи й переноси -->
+            <pre class="overflow-x-auto border p-4 font-mono text-xs leading-relaxed text-ink rounded-ui border-line bg-page"><code><span class="text-muted">// EscrowVault.sol — умова виплати</span>
+<span class="text-primary-light">require</span>(signatures.length &gt;= 2);
+<span class="text-primary-light">require</span>(!frozen || arbiterSigned);
+release(recipient, amount);</code></pre>
+          </div>
+          <ul class="space-y-3">
+            <li class="flex gap-4 p-5 border rounded-card border-line bg-surface">
+              <span class="inline-flex shrink-0 items-center justify-center h-10 w-10 border text-primary rounded-ui border-primary/30 bg-primary/10" aria-hidden="true"><i class="fa-solid fa-key"></i></span>
+              <div>
+                <h3 class="mb-1.5 text-base font-semibold lg:text-lg">Multisig 2-of-3 смарт-контракти</h3>
+                <p class="text-sm text-muted">
+                  Три ключі: покупець, продавець і арбітр. Для будь-якого руху коштів
+                  потрібні два підписи. Жодна сторона, включно з платформою, не може
+                  діяти одноосібно.
+                </p>
+              </div>
+            </li>
+            <li class="flex gap-4 p-5 border rounded-card border-line bg-surface">
+              <span class="inline-flex shrink-0 items-center justify-center h-10 w-10 border text-primary rounded-ui border-primary/30 bg-primary/10" aria-hidden="true"><i class="fa-solid fa-vault"></i></span>
+              <div>
+                <h3 class="mb-1.5 text-base font-semibold lg:text-lg">Без кастодіального ризику</h3>
+                <p class="text-sm text-muted">
+                  Платформа не зберігає кошти на власних гаманцях. Активи лежать у
+                  контракті, а ключ арбітра зберігається в HSM із розділеним доступом.
+                </p>
+              </div>
+            </li>
+            <li class="flex gap-4 p-5 border rounded-card border-line bg-surface">
+              <span class="inline-flex shrink-0 items-center justify-center h-10 w-10 border text-primary rounded-ui border-primary/30 bg-primary/10" aria-hidden="true"><i class="fa-solid fa-bolt"></i></span>
+              <div>
+                <h3 class="mb-1.5 text-base font-semibold lg:text-lg">Fast-Track арбітраж</h3>
+                <p class="text-sm text-muted">
+                  Для угод із чіткими доказами — пріоритетний розгляд до 2 годин.
+                  AI-аналітик формує висновок, фінальне рішення підписує
+                  сертифікований арбітр.
+                  <a class="text-primary-light underline-offset-4 underline decoration-primary hover:decoration-2 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="faq.html#arbitration">Регламент арбітражу</a>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- CTA за прототипом сторінки «Про нас»: фінальний заклик перед підвалом -->
+      <section class="py-12 md:py-16 lg:py-20" aria-labelledby="cta-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <!-- Брендовий банер: текст ліворуч, кнопки праворуч; flex-wrap переносить кнопки під текст.
+               Рамка фокуса тут біла — фіолетова зливалася б із фоном -->
+          <div class="flex flex-wrap items-center justify-between gap-6 p-4 md:p-6 lg:p-8 text-white rounded-banner bg-primary-dark">
+            <div class="flex-[1_1_280px] max-w-[560px]">
+              <h2 class="flex items-start gap-2 mb-2 text-xl font-bold leading-tight md:text-2xl lg:text-3xl" id="cta-title">
+                <i class="fa-solid fa-gavel mt-1 text-base" aria-hidden="true"></i>
+                Перевірте алгоритм на власній угоді
+              </h2>
+              <p class="text-sm text-white/80">
+                0% комісії для покупця. Активи продавця заблоковані до
+                підтвердження оплати.
+              </p>
+            </div>
+            <div class="flex flex-col gap-2.5 md:flex-row w-full md:w-auto">
+              <a class="inline-flex items-center justify-center gap-1.5 min-h-[44px] border px-5 py-2.5 w-full md:w-auto whitespace-nowrap text-sm font-semibold leading-tight text-primary-dark rounded-ui transition duration-200 ease-out border-transparent bg-white active:translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white hover:bg-primary-tint" href="exchange.html">Почати обмін</a>
+              <a class="inline-flex items-center justify-center gap-1.5 min-h-[44px] border px-5 py-2.5 w-full md:w-auto whitespace-nowrap text-sm font-semibold leading-tight text-white rounded-ui transition duration-200 ease-out border-white/50 active:translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white hover:border-white hover:bg-white/[.12]" href="faq.html">Юридична база</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- footer: орієнтир «підвал сайту» (role=contentinfo). ЛР №6 — Tailwind, у парі з хедером:
+         ті самі кольори, рамки border-line, радіуси й стани фокуса.
+         Заголовки груп — h2 (ієрархія не перескакує рівні), кожна група посилань — окремий nav -->
+    <footer class="border-t text-sm text-muted border-line bg-surface">
+      <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+        <!-- SaaS: підписка на оновлення. Без JS — стандартна HTML-валідація (required, type=email) -->
+        <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between border-b py-10 border-line">
+          <div class="max-w-[440px]">
+            <h2 class="text-base font-semibold text-ink md:text-lg" id="subscribe-title">Новини безпеки та оновлення платформи</h2>
+            <p class="mt-1">Раз на місяць: нові мережі, зміни тарифів і поради, як не потрапити на скам.</p>
+          </div>
+          <form class="w-full lg:max-w-[440px]" action="thanks.html" method="get" aria-labelledby="subscribe-title">
+            <div class="flex flex-col gap-2 md:flex-row">
+              <label class="sr-only" for="subscribe-email">Електронна пошта</label>
+              <input
+                class="flex-1 min-h-[44px] w-full border px-3.5 text-sm text-ink placeholder:text-muted rounded-ui border-line bg-page transition-colors duration-200 hover:border-primary/40 focus:border-primary focus:outline-none focus-visible:outline-none [&:not(:placeholder-shown):invalid]:border-danger"
+                id="subscribe-email"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+                aria-describedby="subscribe-hint">
+              <button
+                class="inline-flex items-center justify-center w-full min-h-[44px] px-6 py-3 md:w-auto whitespace-nowrap text-base font-semibold leading-5 text-white rounded-ui bg-primary-dark transition duration-200 ease-out hover:bg-primary-hover hover:shadow-glow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:translate-y-px active:shadow-none disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none"
+                type="submit"
+              >
+                Підписатися
+              </button>
+            </div>
+            <p class="mt-2 text-xs" id="subscribe-hint">Без спаму. Відписатися можна в один клік.</p>
+          </form>
+        </div>
+
+        <!-- Сітка колонок: 1 → 2 → 4 -->
+        <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4 py-12">
+          <!-- 1. Логотип і опис -->
+          <div>
+            <a
+              class="inline-flex items-center gap-2 min-h-[44px] text-ink rounded-ui transition-opacity duration-200 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              href="index.html"
+              aria-label="EQUILOCK — на головну"
+            >
+              <img
+                class="h-7 w-7 mix-blend-screen invert hue-rotate-180 light:invert-0 light:hue-rotate-0 light:mix-blend-multiply"
+                src="assets/icons/logo-mark.webp"
+                alt=""
+                width="28"
+                height="28"
+                loading="lazy"
+                decoding="async">
+              <span class="font-extrabold tracking-logo" aria-hidden="true">EQUILOCK</span>
+            </a>
+            <p class="mt-3 max-w-[280px]">
+              Ескроу-інфраструктура для безпечних P2P та OTC криптоугод. Код замість обіцянок.
+            </p>
+            <p class="mt-4 font-mono text-xs">TRC-20 · ERC-20 · BEP-20</p>
+          </div>
+
+          <!-- 2. Навігація (дублює головне меню) -->
+          <nav aria-labelledby="f-nav">
+            <h2 class="mb-1 text-sm font-semibold text-ink" id="f-nav">Навігація</h2>
+            <ul>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="index.html">Головна</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="exchange.html">Почати обмін</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="catalog.html">Каталог криптовалют</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="about.html" aria-current="page">Про нас</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="index.html#pricing-title">Тарифи</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="faq.html">FAQ та юр. база</a></li>
+            </ul>
+          </nav>
+
+          <!-- 3. Послуги — ведуть на картки секції «Послуги» -->
+          <nav aria-labelledby="f-services">
+            <h2 class="mb-1 text-sm font-semibold text-ink" id="f-services">Послуги</h2>
+            <ul>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="index.html#svc-p2p">P2P-обмін USDT/UAH</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="index.html#svc-otc">OTC-угоди</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="index.html#svc-multisig">Multisig-ескроу 2-of-3</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="index.html#svc-same-name">Same-Name верифікація</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="index.html#svc-arbitrage">Незалежний арбітраж</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="index.html#svc-api">API для бірж і мерчантів</a></li>
+            </ul>
+          </nav>
+
+          <!-- 4. Контакти й соцмережі. address — контактні дані власника сайту -->
+          <div>
+            <h2 class="mb-1 text-sm font-semibold text-ink" id="f-contacts">Контакти</h2>
+            <address class="not-italic">
+              <p>
+                <a class="inline-flex items-center gap-2 min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="mailto:support@equilock.io">
+                  <i class="fa-solid fa-envelope w-4 text-center text-primary" aria-hidden="true"></i>
+                  support@equilock.io
+                </a>
+              </p>
+              <p>
+                <a class="inline-flex items-center gap-2 min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="https://t.me/" rel="noopener noreferrer" target="_blank">
+                  <i class="fa-brands fa-telegram w-4 text-center text-primary" aria-hidden="true"></i>
+                  Підтримка в Telegram, 24/7
+                </a>
+              </p>
+              <p class="flex items-center gap-2 min-h-[44px]">
+                <i class="fa-solid fa-location-dot w-4 text-center text-primary" aria-hidden="true"></i>
+                Київ, Україна
+              </p>
+            </address>
+            <!-- Соцмережі: доступна назва — aria-label посилання; сам SVG декоративний (aria-hidden).
+                 Іконки: Font Awesome Free 6.7.2, CC BY 4.0 -->
+            <ul class="flex flex-wrap gap-2 mt-5" aria-label="Соцмережі">
+                <li>
+                  <a class="inline-flex items-center justify-center h-11 w-11 border text-muted hover:text-ink rounded-ui border-line transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none motion-reduce:hover:translate-y-0" href="https://t.me/" aria-label="EQUILOCK у Telegram" rel="noopener noreferrer" target="_blank">
+                    <svg class="h-[18px] w-[18px] fill-current" viewBox="0 0 496 512" aria-hidden="true" focusable="false"><path d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.107-61.51,68.335-66.746.153-.655.3-3.1-1.154-4.384s-3.59-.849-5.135-.5q-3.283.746-104.608,69.142-14.845,10.194-26.894,9.934c-8.855-.191-25.888-5.006-38.551-9.123-15.531-5.048-27.875-7.717-26.8-16.291q.84-6.7,18.45-13.7,108.446-47.248,144.628-62.3c68.872-28.647,83.183-33.623,92.511-33.789,2.052-.034,6.639.474,9.61,2.885a10.452,10.452,0,0,1,3.53,6.716A43.765,43.765,0,0,1,362.952,176.66Z"/></svg>
+                  </a>
+                </li>
+                <li>
+                  <a class="inline-flex items-center justify-center h-11 w-11 border text-muted hover:text-ink rounded-ui border-line transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none motion-reduce:hover:translate-y-0" href="https://x.com/" aria-label="EQUILOCK у X (Twitter)" rel="noopener noreferrer" target="_blank">
+                    <svg class="h-[18px] w-[18px] fill-current" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+                  </a>
+                </li>
+                <li>
+                  <a class="inline-flex items-center justify-center h-11 w-11 border text-muted hover:text-ink rounded-ui border-line transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none motion-reduce:hover:translate-y-0" href="https://github.com/" aria-label="EQUILOCK на GitHub" rel="noopener noreferrer" target="_blank">
+                    <svg class="h-[18px] w-[18px] fill-current" viewBox="0 0 496 512" aria-hidden="true" focusable="false"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+                  </a>
+                </li>
+                <li>
+                  <a class="inline-flex items-center justify-center h-11 w-11 border text-muted hover:text-ink rounded-ui border-line transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none motion-reduce:hover:translate-y-0" href="https://www.linkedin.com/" aria-label="EQUILOCK у LinkedIn" rel="noopener noreferrer" target="_blank">
+                    <svg class="h-[18px] w-[18px] fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+                  </a>
+                </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Нижній рядок: копірайт, юридичні посилання, статус системи -->
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between border-t py-6 text-xs border-line">
+          <p class="lg:whitespace-nowrap"><small class="text-xs">© 2026 EQUILOCK. Усі права захищено.</small></p>
+          <nav aria-label="Юридична інформація">
+            <ul class="flex flex-wrap gap-x-5">
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="terms.html">Умови використання</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="privacy.html">Політика конфіденційності</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="aml-kyc.html">AML/KYC політика</a></li>
+                <li><a class="inline-flex items-center min-h-[44px] text-muted hover:text-ink rounded-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="faq.html#legal">Легальність і фінмоніторинг</a></li>
+            </ul>
+          </nav>
+          <!-- SaaS: індикатор стану сервісу. Крапка «пульсує» (animate-ping), але не при «менше анімації» -->
+          <a
+            class="inline-flex shrink-0 items-center gap-2 self-start lg:self-auto min-h-[44px] border px-3 py-1.5 whitespace-nowrap font-medium text-success rounded-full border-success/30 bg-success/[.08] transition-colors duration-200 hover:border-success/60 hover:bg-success/[.14] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            href="status.html#system"
+            lang="en"
+          >
+            <span class="relative flex h-2 w-2" aria-hidden="true">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75 motion-reduce:animate-none"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-success"></span>
+            </span>
+            System Status: All systems operational
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

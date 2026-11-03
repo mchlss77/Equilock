@@ -1,0 +1,182 @@
+/* EQUILOCK — власні стилі (ЛР №6)
+
+   Основне оформлення — Tailwind-класи в index.html, тема — tailwind.config там же.
+   Тут лишилося тільки те, що Tailwind-класами не виразити або виразити незручно:
+   • глобальні правила для всієї сторінки (фокус, «менше анімації»);
+   • псевдоелементи браузерів (progress, стрілки числового поля, маркер details);
+   • іконки Font Awesome через content (::before / ::after);
+   • складні селектори таблиці, щоб не повторювати ті самі класи на 40+ клітинках.
+
+   Play CDN вставляє стилі Tailwind ПІСЛЯ цього файлу, тому тут лише те,
+   чого Tailwind не задає, — правила не конфліктують. */
+
+/* =========================================================
+   1. ТОКЕНИ
+   Лише значення, які потрібні правилам нижче. Кольори збігаються з tailwind.config.
+   ========================================================= */
+:root {
+  /* Кольори теми — канали RGB для tailwind.config.js (rgb(var(--c-…) / alpha)).
+     Темна тема (за замовчуванням) — значення дизайн-системи EQUILOCK */
+  --c-page: 11 13 17; /* #0B0D11 */
+  --c-surface: 20 23 31; /* #14171F */
+  --c-elevated: 26 30 40; /* #1A1E28 */
+  --c-ink: 243 244 246; /* #F3F4F6 */
+  --c-muted: 156 163 175; /* #9CA3AF */
+  --c-line: 35 39 51; /* #232733 */
+  --c-primary-light: 224 231 255; /* #E0E7FF */
+  --c-success: 34 197 94; /* #22C55E */
+  --c-danger: 239 68 68; /* #EF4444 */
+  --c-accent: 245 158 11; /* #F59E0B */
+  color-scheme: dark;
+
+  --color-brand: #6366f1;
+  --color-success: rgb(var(--c-success));
+  --color-border: rgb(var(--c-line));
+  --color-focus: var(--color-brand);
+
+  --font-family-icons: "Font Awesome 6 Free";
+  --font-weight-icon-solid: 900; /* суцільні іконки Font Awesome */
+  --font-size-xs: 0.75rem; /* 12px */
+
+  --space-2: 8px;
+  --space-3-5: 14px;
+  --space-4: 16px;
+
+  --border: 1px solid var(--color-border);
+  --focus-ring: 2px solid var(--color-focus);
+
+  /* Тривалості анімацій. Tailwind читає їх через tailwind.config
+     (transition, duration-150/200/300), тому правило нижче вимикає всі переходи сторінки */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+}
+
+/* Світла тема (кнопка-перемикач у шапці, js/theme.js ставить data-theme="light" на <html>).
+   Відповідники з палітри Tailwind (gray / green-800 / red-700 / amber-800 / indigo-700),
+   підібрані під контраст WCAG AA на світлому фоні */
+:root[data-theme="light"] {
+  --c-page: 249 250 251; /* gray-50 */
+  --c-surface: 255 255 255; /* white */
+  --c-elevated: 243 244 246; /* gray-100 */
+  --c-ink: 17 24 39; /* gray-900 */
+  --c-muted: 75 85 99; /* gray-600 — 7.6:1 на білому */
+  --c-line: 209 213 219; /* gray-300 */
+  --c-primary-light: 67 56 202; /* indigo-700 — 7.9:1 на білому */
+  --c-success: 22 101 52; /* green-800 — AA і на блідо-зеленому тлі плашок */
+  --c-danger: 185 28 28; /* red-700 */
+  --c-accent: 146 64 14; /* amber-800 — AA і на блідо-бурштиновому тлі */
+  color-scheme: light;
+}
+
+/* Повага до налаштування «менше анімації» в системі: одне правило замість
+   motion-reduce: на кожному елементі */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}
+
+/* =========================================================
+   2. ФОКУС
+   Видима рамка фокуса для навігації з клавіатури на всій сторінці (WCAG 2.4.7).
+   Компоненти можуть перефарбувати її класом focus-visible:outline-*
+   (наприклад, біла рамка в CTA-банері)
+   ========================================================= */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   3. ТАЙМЕР ФІКСАЦІЇ КУРСУ (<progress class="timer">)
+   Розміри й фон — Tailwind-класи в HTML. Тут — колір смуги: це псевдоелементи браузерів,
+   і їх не можна об'єднати в один селектор (невідомий псевдоелемент скасовує все правило)
+   ========================================================= */
+.timer::-webkit-progress-bar {
+  background: var(--color-border);
+}
+
+.timer::-webkit-progress-value {
+  background: var(--color-brand);
+}
+
+.timer::-moz-progress-bar {
+  background: var(--color-brand);
+}
+
+/* =========================================================
+   4. ЧИСЛОВЕ ПОЛЕ БЕЗ СТРІЛОК (калькулятор у hero)
+   ========================================================= */
+.no-spinner {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+/* =========================================================
+   5. FAQ (<details class="faq-item">)
+   Стандартний трикутник замінено на «+» з Font Awesome; при відкритті він повертається в «×»
+   ========================================================= */
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: "\2b";
+  flex-shrink: 0;
+  color: var(--color-brand);
+  font-family: var(--font-family-icons);
+  font-weight: var(--font-weight-icon-solid);
+  transition: transform var(--duration-base) ease;
+}
+
+.faq-item[open] summary::after {
+  transform: rotate(45deg);
+}
+
+/* =========================================================
+   6. ТАРИФИ: ГАЛОЧКА ПЕРЕД ПУНКТОМ
+   Іконка декоративна, тому не в HTML, а через ::before
+   ========================================================= */
+.plan-feature::before {
+  content: "\f00c";
+  margin-right: var(--space-2);
+  color: var(--color-success);
+  font-family: var(--font-family-icons);
+  font-weight: var(--font-weight-icon-solid);
+  font-size: var(--font-size-xs);
+}
+
+/* =========================================================
+   7. ТАБЛИЦЯ ПОРІВНЯННЯ (<table class="compare">)
+   Однакові відступи й лінії для всіх клітинок — складні селектори замість
+   повторення класів на кожній th / td
+   ========================================================= */
+.compare th,
+.compare td {
+  padding: var(--space-3-5) var(--space-4);
+  border-top: var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.compare th {
+  font-weight: 600;
+}
+
+.compare thead th {
+  border-top: 0;
+  font-size: var(--font-size-xs);
+}
+
+.compare tbody th {
+  width: 40%;
+}
