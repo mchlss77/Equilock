@@ -302,14 +302,14 @@
             </table>
           </div>
           <p>Example of creating a deal:</p>
-          <pre class="overflow-x-auto border p-4 font-mono text-xs leading-relaxed text-ink rounded-ui border-line bg-page mb-4"><code>curl -X POST https://api.equilock.io/v1/deals \
+          <pre class="lift overflow-x-auto border p-4 font-mono text-xs leading-relaxed text-ink rounded-ui border-line bg-page mb-4"><code>curl -X POST https://api.equilock.io/v1/deals \
   -H "Authorization: Bearer $API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"amount": "1000.00", "asset": "USDT", "network": "TRC-20", "counterparty": "u_48213"}'</code></pre>
 
           <h2 id="webhooks">4. Webhooks</h2>
           <p>On every status change, EQUILOCK sends a POST request to your URL. The request signature is in the header <code class="font-mono text-ink">X-Equilock-Signature</code> (HMAC-SHA256 of the request body).</p>
-          <pre class="overflow-x-auto border p-4 font-mono text-xs leading-relaxed text-ink rounded-ui border-line bg-page mb-4"><code>{
+          <pre class="lift overflow-x-auto border p-4 font-mono text-xs leading-relaxed text-ink rounded-ui border-line bg-page mb-4"><code>{
   "event": "deal.released",
   "deal_id": "EQ-84920",
   "amount": "12500.00",

@@ -303,14 +303,14 @@
             </table>
           </div>
           <p>Приклад створення угоди:</p>
-          <pre class="overflow-x-auto border p-4 font-mono text-xs leading-relaxed text-ink rounded-ui border-line bg-page mb-4"><code>curl -X POST https://api.equilock.io/v1/deals \
+          <pre class="lift overflow-x-auto border p-4 font-mono text-xs leading-relaxed text-ink rounded-ui border-line bg-page mb-4"><code>curl -X POST https://api.equilock.io/v1/deals \
   -H "Authorization: Bearer $API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"amount": "1000.00", "asset": "USDT", "network": "TRC-20", "counterparty": "u_48213"}'</code></pre>
 
           <h2 id="webhooks">4. Вебхуки</h2>
           <p>Під час кожної зміни статусу EQUILOCK надсилає POST-запит на вашу адресу. Підпис запиту — в заголовку <code class="font-mono text-ink">X-Equilock-Signature</code> (HMAC-SHA256 від тіла запиту).</p>
-          <pre class="overflow-x-auto border p-4 font-mono text-xs leading-relaxed text-ink rounded-ui border-line bg-page mb-4"><code>{
+          <pre class="lift overflow-x-auto border p-4 font-mono text-xs leading-relaxed text-ink rounded-ui border-line bg-page mb-4"><code>{
   "event": "deal.released",
   "deal_id": "EQ-84920",
   "amount": "12500.00",
