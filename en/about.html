@@ -247,22 +247,22 @@
               <strong class="font-semibold text-ink">“code instead of promises”</strong>.
             </p>
             <dl class="grid grid-cols-3 gap-4 mt-8 border-t pt-5 border-line">
-              <div class="flex flex-col-reverse">
+              <div class="stat-hover flex flex-col-reverse">
                 <dt class="text-xs text-muted">protected in escrow</dt>
                 <dd class="font-mono text-lg font-bold md:text-[22px]">$48M+</dd>
               </div>
-              <div class="flex flex-col-reverse">
+              <div class="stat-hover flex flex-col-reverse">
                 <dt class="text-xs text-muted">completed deals</dt>
                 <dd class="font-mono text-lg font-bold md:text-[22px]">27 400+</dd>
               </div>
-              <div class="flex flex-col-reverse">
+              <div class="stat-hover flex flex-col-reverse">
                 <dt class="text-xs text-muted">dispute review</dt>
                 <dd class="font-mono text-lg font-bold md:text-[22px]">&lt; 24 h</dd>
               </div>
             </dl>
           </div>
           <img
-            class="aspect-square object-cover w-full border rounded-card border-line"
+            class="lift aspect-square object-cover w-full border rounded-card border-line"
             src="../assets/images/hero-banner-960.webp"
               srcset="../assets/images/hero-banner-640.webp 640w, ../assets/images/hero-banner-960.webp 960w, ../assets/images/hero-banner-1280.webp 1280w"
               sizes="(min-width: 768px) 440px, calc(100vw - 32px)"
@@ -360,7 +360,7 @@
               The 2-of-3 key scheme guarantees that a payout needs the consent of two of the three parties. In a normal deal these are the buyer and the seller; in a dispute — the arbitrator and the party the decision favors.
             </p>
             <!-- pre + code: фрагмент коду зберігає відступи й переноси -->
-            <pre class="overflow-x-auto border p-4 font-mono text-xs leading-relaxed text-ink rounded-ui border-line bg-page"><code><span class="text-muted">// EscrowVault.sol — payout condition</span>
+            <pre class="lift overflow-x-auto border p-4 font-mono text-xs leading-relaxed text-ink rounded-ui border-line bg-page"><code><span class="text-muted">// EscrowVault.sol — payout condition</span>
 <span class="text-primary-light">require</span>(signatures.length &gt;= 2);
 <span class="text-primary-light">require</span>(!frozen || arbiterSigned);
 release(recipient, amount);</code></pre>
@@ -403,7 +403,7 @@ release(recipient, amount);</code></pre>
         <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
           <!-- Брендовий банер: текст ліворуч, кнопки праворуч; flex-wrap переносить кнопки під текст.
                Рамка фокуса тут біла — фіолетова зливалася б із фоном -->
-          <div class="flex flex-wrap items-center justify-between gap-6 p-4 md:p-6 lg:p-8 text-white rounded-banner bg-primary-dark">
+          <div class="lift flex flex-wrap items-center justify-between gap-6 p-4 md:p-6 lg:p-8 text-white rounded-banner bg-primary-dark">
             <div class="flex-[1_1_280px] max-w-[560px]">
               <h2 class="flex items-start gap-2 mb-2 text-xl font-bold leading-tight md:text-2xl lg:text-3xl" id="cta-title">
                 <i class="fa-solid fa-gavel mt-1 text-base" aria-hidden="true"></i>

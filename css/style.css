@@ -364,3 +364,42 @@ header[data-header] [aria-controls="main-nav"] {
     padding-bottom: 72px;
   }
 }
+
+/* =========================================================
+   11. РЕАКЦІЯ НА НАВЕДЕННЯ ДЛЯ БЛОКІВ БЕЗ TAILWIND-КЛАСІВ HOVER
+   .lift — той самий ефект, що в картках (підйом, фіолетова рамка, тінь);
+   .stat-hover — показник у рядку цифр підсвічується фоном
+   ========================================================= */
+.lift {
+  transition:
+    transform var(--duration-base) ease-out,
+    border-color var(--duration-base) ease-out,
+    box-shadow var(--duration-base) ease-out;
+}
+
+.lift:hover {
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.stat-hover {
+  margin: -8px;
+  padding: 8px;
+  border-radius: 10px;
+  transition:
+    background-color var(--duration-base) ease,
+    transform var(--duration-base) ease-out;
+}
+
+.stat-hover:hover {
+  background: rgb(var(--c-elevated));
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lift:hover,
+  .stat-hover:hover {
+    transform: none;
+  }
+}
