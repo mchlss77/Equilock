@@ -6,6 +6,14 @@
 (() => {
   const ticker = document.querySelector("[data-ticker]");
   if (!ticker) return;
+  // Копія списку для безшовного бігу рядка на mobile (css/style.css, розділ 8).
+  // Читачі екрана її не чують; ціни в ній оновлюються разом з оригіналом
+  const list = ticker.querySelector("ul");
+  if (list) {
+    const copy = list.cloneNode(true);
+    copy.setAttribute("aria-hidden", "true");
+    list.after(copy);
+  }
   const items = [...ticker.querySelectorAll("[data-ticker-coin]")];
   const status = ticker.querySelector("[data-ticker-status]");
   const API = "https://api.coingecko.com/api/v3/simple/price";

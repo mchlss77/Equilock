@@ -42,7 +42,7 @@
     <!-- Доступність: дає змогу з клавіатури одразу перейти до основного вмісту -->
     <a class="fixed left-4 top-3 z-[100] flex items-center min-h-[44px] px-4 py-2.5 font-semibold text-white -translate-y-[200%] rounded-ui bg-primary-dark transition-transform duration-200 focus:translate-y-0" href="#main">Перейти до основного вмісту</a>
 
-    <!-- header: орієнтир «шапка сайту» (role=banner). Липкий: -top-7 (= висота рядка курсів, 28px)
+    <!-- header: орієнтир «шапка сайту» (role=banner). Липкий: верх задано в css/style.css (= висота рядка курсів)
          ховає курси при прокрутці, а панель з меню лишається видимою.
          data-header — точка входу для js/header.js -->
     <header class="sticky -top-7 z-10" data-header>
@@ -381,7 +381,7 @@
         <div class="mx-auto mt-10 w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
           <!-- dl: показник (dd) і його підпис (dt); flex-col-reverse ставить число зверху.
                divide-* малює роздільники між показниками -->
-          <dl class="grid grid-cols-1 sm:grid-cols-3 divide-y border sm:divide-x sm:divide-y-0 divide-line rounded-card border-line">
+          <dl class="stats-strip grid grid-cols-1 sm:grid-cols-3 divide-y border sm:divide-x sm:divide-y-0 divide-line rounded-card border-line">
             <div class="flex flex-col-reverse px-5 py-4">
               <dt class="text-xs text-muted">мультипідпис ескроу: покупець, продавець, арбітр</dt>
               <dd class="font-mono text-[22px] font-bold">2-of-3</dd>

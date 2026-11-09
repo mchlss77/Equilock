@@ -180,3 +180,187 @@
 .compare tbody th {
   width: 40%;
 }
+
+/* =========================================================
+   8. ШАПКА: БІЛЬША ПАНЕЛЬ, ЛОГОТИП І РЯДОК КУРСІВ
+   Розмітка шапки однакова на всіх сторінках, тому розміри задано тут, а не
+   в 24 файлах. tailwind.css підключено після цього файлу, тож селектори тут
+   навмисно специфічніші за один клас Tailwind
+   ========================================================= */
+:root {
+  --ticker-h: 34px;
+  --bar-h: 72px;
+  --logo-size: 40px;
+}
+
+/* Липка шапка ховає рівно висоту рядка курсів (раніше -top-7 = 28px) */
+header[data-header] {
+  top: calc(-1 * var(--ticker-h) - 1px);
+}
+
+/* Рядок курсів: трохи вищий і з більшим шрифтом */
+header [data-ticker] {
+  height: calc(var(--ticker-h) + 1px);
+  font-size: 12.5px;
+}
+
+/* Mobile: пари не вміщаються в ширину екрана, тому рядок біжить по колу.
+   Друга копія списку (aria-hidden, js/ticker.js) робить петлю безшовною */
+header [data-ticker] > ul {
+  flex-shrink: 0;
+  width: max-content;
+  padding-right: 20px;
+  animation: ticker-run 22s linear infinite;
+}
+
+header [data-ticker]:hover > ul {
+  animation-play-state: paused;
+}
+
+@keyframes ticker-run {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (min-width: 640px) {
+  header [data-ticker] > ul {
+    flex-shrink: 1;
+    width: 100%;
+    padding-right: 0;
+    animation: none;
+  }
+
+  header [data-ticker] > ul[aria-hidden="true"] {
+    display: none;
+  }
+
+  header [data-ticker] {
+    font-size: 13px;
+  }
+}
+
+/* «Менше анімації»: без бігу — рядок можна прогорнути пальцем */
+@media (prefers-reduced-motion: reduce) {
+  header [data-ticker] {
+    overflow-x: auto;
+  }
+
+  header [data-ticker] > ul {
+    animation: none;
+  }
+
+  header [data-ticker] > ul[aria-hidden="true"] {
+    display: none;
+  }
+}
+
+/* Панель з логотипом і меню */
+header[data-header] > div > div,
+header[data-header] > div > div > a:first-child {
+  min-height: var(--bar-h);
+}
+
+header[data-header] > div > div > a:first-child {
+  gap: 10px;
+}
+
+/* Логотип збільшено сильніше, ніж панель (28 → 40px проти 60 → 72px) */
+header[data-header] > div > div > a:first-child > img {
+  width: var(--logo-size);
+  height: var(--logo-size);
+}
+
+header[data-header] > div > div > a:first-child > span {
+  font-size: 20px;
+}
+
+header[data-header] [aria-controls="main-nav"] {
+  width: 48px;
+  height: 48px;
+  font-size: 18px;
+}
+
+/* Ноутбук 1024–1279px: меню тут ледь вміщається в рядок, тому логотип трохи менший,
+   а пункти меню щільніші — інакше кнопки праворуч переносяться на другий рядок */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  header[data-header] > div > div > a:first-child > img {
+    width: 36px;
+    height: 36px;
+  }
+
+  header[data-header] > div > div > a:first-child > span {
+    font-size: 17px;
+  }
+
+  #main-nav > ul > li > a,
+  #main-nav > ul > li > button {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+/* =========================================================
+   9. ПОКАЗНИКИ ПІД БАНЕРОМ (<dl class="stats-strip">)
+   Більший шрифт і реакція клітинки на наведення, як в інших блоках
+   ========================================================= */
+.stats-strip > div {
+  /* flex-col-reverse: flex-end притискає число до верху — числа на одній лінії */
+  justify-content: flex-end;
+  padding: 20px 24px;
+  transition: background-color var(--duration-base) ease;
+}
+
+.stats-strip > div:hover {
+  background: rgb(var(--c-elevated));
+}
+
+.stats-strip > div:first-child {
+  border-radius: 12px 12px 0 0;
+}
+
+.stats-strip > div:last-child {
+  border-radius: 0 0 12px 12px;
+}
+
+.stats-strip dd {
+  margin-bottom: 4px;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.stats-strip dt {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+@media (min-width: 640px) {
+  .stats-strip > div:first-child {
+    border-radius: 12px 0 0 12px;
+  }
+
+  .stats-strip > div:last-child {
+    border-radius: 0 12px 12px 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .stats-strip dd {
+    font-size: 34px;
+  }
+
+  .stats-strip dt {
+    font-size: 15px;
+  }
+}
+
+/* =========================================================
+   10. MOBILE: ЗАПАС ПІД ПЛАВАЮЧИЙ БЕЙДЖ ХОСТИНГУ
+   Netlify показує поверх сторінки бейдж у правому нижньому куті —
+   відступ, щоб кінець футера не ховався під ним
+   ========================================================= */
+@media (max-width: 767px) {
+  body > footer {
+    padding-bottom: 72px;
+  }
+}
