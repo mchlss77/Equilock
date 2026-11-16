@@ -402,12 +402,49 @@
           </dl>
         </div>
       </section>
-      <!-- ===== ГАЛЕРЕЯ «5 КРОКІВ» (Swiper 11 + Fancybox 5) =====
-           Слайдер і збільшення скріншотів — js/gallery.js; стилі — розділ 12 в css/style.css -->
-      <section class="how" id="how" aria-labelledby="how-title">
-        <div class="how__container">
-          <p class="how__label">Як це працює</p>
-          <h2 class="how__title" id="how-title">5 кроків безпечної угоди з <span>EQUILOCK</span></h2>
+
+      <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="how-it-works" aria-labelledby="steps-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Як це працює</p>
+          <h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="steps-title">Як працює наш захист</h2>
+
+          <!-- ol: кроки мають чіткий порядок; номер «01 / 04» прихований від читачів екрана, бо порядок уже задає список.
+               1 → 2 → 4 колонки -->
+          <ol class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mt-6">
+            <li class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <span class="inline-block mb-3.5 border px-2 py-0.5 font-mono text-3xs text-primary rounded-full border-primary/40" aria-hidden="true">01 / 04</span>
+              <h3 class="mb-1.5 text-base font-semibold">Миттєвий Lock</h3>
+              <p class="text-muted">У момент створення угоди крипта блокується в ескроу (multisig 2-of-3 / смарт-контракт).</p>
+            </li>
+            <li class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <span class="inline-block mb-3.5 border px-2 py-0.5 font-mono text-3xs text-primary rounded-full border-primary/40" aria-hidden="true">02 / 04</span>
+              <h3 class="mb-1.5 text-base font-semibold">Прозорий таймлайн</h3>
+              <p class="text-muted">Ви та ваш контрагент бачите кожен статус у реальному часі: «заблоковано» → «оплачено» → «завершено».</p>
+            </li>
+            <li class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <span class="inline-block mb-3.5 border px-2 py-0.5 font-mono text-3xs text-primary rounded-full border-primary/40" aria-hidden="true">03 / 04</span>
+              <h3 class="mb-1.5 text-base font-semibold">Автоматична верифікація</h3>
+              <p class="text-muted">Фіксація курсу за таймером та захист від платежів із чужих карток.</p>
+            </li>
+            <li class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <span class="inline-block mb-3.5 border px-2 py-0.5 font-mono text-3xs text-primary rounded-full border-primary/40" aria-hidden="true">04 / 04</span>
+              <h3 class="mb-1.5 text-base font-semibold">Миттєве заморожування при спорі</h3>
+              <p class="text-muted">Кнопка «Викликати арбітраж» заморожує виплату та відкриває форму подачі доказів без затримки капіталу.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+      <!-- ===== ЕТАПИ УГОДИ: слайдер скріншотів (Swiper 11 + Fancybox 5) =====
+           Обгортка секції, контейнер, підпис і заголовок — ті самі Tailwind-класи, що в решті секцій
+           (тому тема, ширина та відступи збігаються). Власний CSS — лише слайдер: розділ 12 в css/style.css.
+           Логіка — js/gallery.js -->
+      <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="how" aria-labelledby="how-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Етапи угоди</p>
+          <h2 class="mb-6 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="how-title">
+            Як проходить угода в <span class="text-primary">EQUILOCK</span>
+          </h2>
+
           <div class="swiper how__slider">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
@@ -442,39 +479,7 @@
           </div>
         </div>
       </section>
-      <!-- ===== /ГАЛЕРЕЯ «5 КРОКІВ» ===== -->
-
-      <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="how-it-works" aria-labelledby="steps-title">
-        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
-          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Як це працює</p>
-          <h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="steps-title">Як працює наш захист</h2>
-
-          <!-- ol: кроки мають чіткий порядок; номер «01 / 04» прихований від читачів екрана, бо порядок уже задає список.
-               1 → 2 → 4 колонки -->
-          <ol class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mt-6">
-            <li class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
-              <span class="inline-block mb-3.5 border px-2 py-0.5 font-mono text-3xs text-primary rounded-full border-primary/40" aria-hidden="true">01 / 04</span>
-              <h3 class="mb-1.5 text-base font-semibold">Миттєвий Lock</h3>
-              <p class="text-muted">У момент створення угоди крипта блокується в ескроу (multisig 2-of-3 / смарт-контракт).</p>
-            </li>
-            <li class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
-              <span class="inline-block mb-3.5 border px-2 py-0.5 font-mono text-3xs text-primary rounded-full border-primary/40" aria-hidden="true">02 / 04</span>
-              <h3 class="mb-1.5 text-base font-semibold">Прозорий таймлайн</h3>
-              <p class="text-muted">Ви та ваш контрагент бачите кожен статус у реальному часі: «заблоковано» → «оплачено» → «завершено».</p>
-            </li>
-            <li class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
-              <span class="inline-block mb-3.5 border px-2 py-0.5 font-mono text-3xs text-primary rounded-full border-primary/40" aria-hidden="true">03 / 04</span>
-              <h3 class="mb-1.5 text-base font-semibold">Автоматична верифікація</h3>
-              <p class="text-muted">Фіксація курсу за таймером та захист від платежів із чужих карток.</p>
-            </li>
-            <li class="h-full p-5 text-sm rounded-card border border-line bg-surface transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
-              <span class="inline-block mb-3.5 border px-2 py-0.5 font-mono text-3xs text-primary rounded-full border-primary/40" aria-hidden="true">04 / 04</span>
-              <h3 class="mb-1.5 text-base font-semibold">Миттєве заморожування при спорі</h3>
-              <p class="text-muted">Кнопка «Викликати арбітраж» заморожує виплату та відкриває форму подачі доказів без затримки капіталу.</p>
-            </li>
-          </ol>
-        </div>
-      </section>
+      <!-- ===== /ЕТАПИ УГОДИ ===== -->
 
       <!-- ===== ВІДЕОГІД (YouTube) =====
            iframe не завантажується одразу: спершу кнопка «Переглянути відео»; після натискання js/embeds.js

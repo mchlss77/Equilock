@@ -428,52 +428,25 @@ body [class~="focus-within:shadow-card-hover"]:focus-within {
 }
 
 /* =========================================================
-   12. ГАЛЕРЕЯ «5 КРОКІВ» (.how — Swiper 11 + Fancybox 5)
-   Секція після Hero в index.html. Кольори й шрифти — токени сайту
-   (primary #6366F1, accent --c-accent, текст --c-ink, Manrope / JetBrains Mono)
+   12. СЛАЙДЕР «ЕТАПИ УГОДИ» (.how__slider — Swiper 11 + Fancybox 5)
+   Секція після «Як працює наш захист». Обгортка, контейнер, підпис і заголовок —
+   Tailwind-класи в index.html, як у решті секцій. Тут лише те, чого Tailwind не задає:
+   елементи керування Swiper і зовнішній вигляд скріншотів.
+   Кольори — токени теми, тож світла й темна теми працюють однаково
    ========================================================= */
-.how {
-  padding-top: 80px;
-  padding-bottom: 80px;
-  border-bottom: var(--border);
-}
-
-.how__container {
-  max-width: 1100px;
-  margin-inline: auto;
-  padding-inline: var(--space-4);
-}
-
-/* Надзаголовок — акцентний колір і моноширинний шрифт, як в інших секціях */
-.how__label {
-  margin-bottom: var(--space-2);
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: var(--font-size-xs);
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  color: rgb(var(--c-accent));
-}
-
-.how__title {
-  margin-bottom: 32px;
-  font-size: clamp(1.5rem, 4vw, 2.25rem);
-  font-weight: 700;
-  line-height: 1.2;
-  color: rgb(var(--c-ink));
-}
-
-.how__title span {
-  color: var(--color-brand);
-}
-
-/* Місце під пагінацію під слайдами + кольори елементів керування Swiper */
 .how__slider {
-  padding-bottom: 50px;
-  --swiper-navigation-color: rgb(var(--c-ink));
+  /* Swiper читає ці змінні; пагінація — акцентний колір сайту */
+  --swiper-navigation-color: #fff;
   --swiper-pagination-color: rgb(var(--c-accent));
+  --swiper-pagination-bullet-inactive-color: rgb(var(--c-muted));
+  /* місце під пагінацію під слайдами */
+  padding-bottom: 50px;
+  /* підстраховка: якщо CSS Swiper з CDN не завантажиться, слайди не розтягнуть сторінку */
+  overflow: hidden;
 }
 
-.how__slider img {
+/* Слайдер — на всю ширину контейнера секції */
+.how__slider .swiper-slide img {
   display: block;
   width: 100%;
   height: auto;
@@ -481,13 +454,19 @@ body [class~="focus-within:shadow-card-hover"]:focus-within {
   box-shadow: 0 0 40px rgba(99, 102, 241, 0.25);
 }
 
-/* Стрілки — кола 44px (мінімальна площа дотику) з напівпрозорим primary-фоном */
+.how__slider .swiper-slide a {
+  display: block;
+  border-radius: 20px;
+}
+
+/* Стрілки — кола 44px (мінімальна площа дотику) у primary-кольорі сайту */
 .how__slider .swiper-button-prev,
 .how__slider .swiper-button-next {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(99, 102, 241, 0.35);
+  background: var(--color-brand);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
   transition: background-color var(--duration-base) ease;
 }
 
