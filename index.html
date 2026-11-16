@@ -24,6 +24,10 @@
     <!-- Font Awesome 6.7.2 — локально (assets/vendor/fontawesome); той самий файл, що був на CDN -->
     <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
 
+    <!-- Swiper 11 і Fancybox 5 (CDN) — слайдер «Як це працює»; до власних стилів, щоб їх можна було перекрити -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css">
+
     <!-- Власні стилі -->
     <link rel="stylesheet" href="css/style.css">
     <!-- Tailwind CSS, зібраний локально з tailwind.config.js (замість Play CDN). Підключений після style.css —
@@ -298,10 +302,11 @@
               Безпечні P2P та OTC криптоугоди
               <span class="text-primary">без ризику скаму</span>
             </h1>
-            <p class="max-w-[34rem] text-base text-muted md:text-lg">
-              Надійно захищаємо ваші кошти в ескроу до повного підтвердження
-              оплати. Простий покроковий процес без заплутаного крипто-жаргону.
-              Код замість обіцянок.
+            <!-- Підзаголовок з ефектом друку (Typed.js, ініціалізація в js/gallery.js).
+                 Фрази задані в JS; текст усередині span — перша фраза для пошуковиків і браузерів без JS.
+                 aria-live="off" — щоб читач екрана не проговорював кожну нову літеру -->
+            <p class="hero-typed max-w-[34rem] text-base text-muted md:text-lg" aria-live="off">
+              <span data-typed>Кошти в ескроу до підтвердження оплати</span>
             </p>
             <!-- CTA: Button з дизайн-системи, розмір lg. Основна дія — primary (заливка, стрілка, світіння на hover);
                  друга — приглушений ghost (сірий текст, рамка без світіння), тож основна домінує. На mobile — у стовпчик на всю ширину -->
@@ -397,6 +402,47 @@
           </dl>
         </div>
       </section>
+      <!-- ===== ГАЛЕРЕЯ «5 КРОКІВ» (Swiper 11 + Fancybox 5) =====
+           Слайдер і збільшення скріншотів — js/gallery.js; стилі — розділ 12 в css/style.css -->
+      <section class="how" id="how" aria-labelledby="how-title">
+        <div class="how__container">
+          <p class="how__label">Як це працює</p>
+          <h2 class="how__title" id="how-title">5 кроків безпечної угоди з <span>EQUILOCK</span></h2>
+          <div class="swiper how__slider">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <a href="assets/images/step1.png" data-fancybox="equilock-steps" data-caption="Крок 1 — Створення угоди">
+                  <img src="assets/images/step1.png" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 1: Створення угоди">
+                </a>
+              </div>
+              <div class="swiper-slide">
+                <a href="assets/images/step2.png" data-fancybox="equilock-steps" data-caption="Крок 2 — Депозит USDT в escrow">
+                  <img src="assets/images/step2.png" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 2: Депозит USDT в escrow">
+                </a>
+              </div>
+              <div class="swiper-slide">
+                <a href="assets/images/step3.png" data-fancybox="equilock-steps" data-caption="Крок 3 — Оплата в гривні">
+                  <img src="assets/images/step3.png" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 3: Оплата в гривні">
+                </a>
+              </div>
+              <div class="swiper-slide">
+                <a href="assets/images/step4.png" data-fancybox="equilock-steps" data-caption="Крок 4 — Підтвердження оплати">
+                  <img src="assets/images/step4.png" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 4: Підтвердження оплати">
+                </a>
+              </div>
+              <div class="swiper-slide">
+                <a href="assets/images/step5.png" data-fancybox="equilock-steps" data-caption="Крок 5 — Виплата коштів">
+                  <img src="assets/images/step5.png" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 5: Виплата коштів">
+                </a>
+              </div>
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-pagination"></div>
+          </div>
+        </div>
+      </section>
+      <!-- ===== /ГАЛЕРЕЯ «5 КРОКІВ» ===== -->
 
       <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="how-it-works" aria-labelledby="steps-title">
         <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
@@ -1446,5 +1492,12 @@
         </div>
       </div>
     </footer>
+
+    <!-- Swiper 11 і Fancybox 5 (CDN) + ініціалізація галереї «5 кроків». Порядок важливий:
+         бібліотеки мають бути завантажені до js/gallery.js -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script src="js/gallery.js"></script>
   </body>
 </html>

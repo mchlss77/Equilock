@@ -426,3 +426,108 @@ body [class~="focus-within:shadow-card-hover"]:focus-within {
     transform: none;
   }
 }
+
+/* =========================================================
+   12. ГАЛЕРЕЯ «5 КРОКІВ» (.how — Swiper 11 + Fancybox 5)
+   Секція після Hero в index.html. Кольори й шрифти — токени сайту
+   (primary #6366F1, accent --c-accent, текст --c-ink, Manrope / JetBrains Mono)
+   ========================================================= */
+.how {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  border-bottom: var(--border);
+}
+
+.how__container {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+/* Надзаголовок — акцентний колір і моноширинний шрифт, як в інших секціях */
+.how__label {
+  margin-bottom: var(--space-2);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: rgb(var(--c-accent));
+}
+
+.how__title {
+  margin-bottom: 32px;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: rgb(var(--c-ink));
+}
+
+.how__title span {
+  color: var(--color-brand);
+}
+
+/* Місце під пагінацію під слайдами + кольори елементів керування Swiper */
+.how__slider {
+  padding-bottom: 50px;
+  --swiper-navigation-color: rgb(var(--c-ink));
+  --swiper-pagination-color: rgb(var(--c-accent));
+}
+
+.how__slider img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.25);
+}
+
+/* Стрілки — кола 44px (мінімальна площа дотику) з напівпрозорим primary-фоном */
+.how__slider .swiper-button-prev,
+.how__slider .swiper-button-next {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.35);
+  transition: background-color var(--duration-base) ease;
+}
+
+.how__slider .swiper-button-prev:hover,
+.how__slider .swiper-button-next:hover {
+  background: #4f46e5; /* primary-dark — колір hover кнопок сайту */
+}
+
+.how__slider .swiper-button-prev::after,
+.how__slider .swiper-button-next::after {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* На вузьких екранах стрілки лишні — гортання пальцем і пагінація */
+@media (max-width: 640px) {
+  .how__slider .swiper-button-prev,
+  .how__slider .swiper-button-next {
+    display: none;
+  }
+}
+
+/* =========================================================
+   13. ПІДЗАГОЛОВОК HERO З ЕФЕКТОМ ДРУКУ (.hero-typed — Typed.js)
+   Фрази різної довжини, тому висота зарезервована під два рядки:
+   без цього CTA-кнопки «стрибали» б при зміні фрази
+   ========================================================= */
+.hero-typed {
+  min-height: calc(2 * 1.55em);
+}
+
+/* Курсор Typed.js — кольором бренду, щоб читався як частина підзаголовка */
+.hero-typed .typed-cursor {
+  color: var(--color-brand);
+  font-weight: 400;
+}
+
+/* «Менше анімації»: блимання курсора вимкнено (сам ефект друку вимикає js/gallery.js) */
+@media (prefers-reduced-motion: reduce) {
+  .hero-typed .typed-cursor {
+    animation: none;
+  }
+}
