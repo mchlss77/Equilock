@@ -1021,6 +1021,105 @@
         </div>
       </section>
 
+      <!-- КАЛЬКУЛЯТОР КОМІСІЇ: live-розрахунок без кнопки (js/widget.js).
+           Мінімальна комісія — 1 USDT. Порожні <p> під полями — місце для тексту помилки,
+           його заповнює скрипт; min-h тримає висоту, щоб поля не стрибали під час набору -->
+      <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="fee-calc" aria-labelledby="fee-calc-title">
+        <div class="mx-auto w-full max-w-[1056px] px-4 md:px-6 lg:px-8">
+          <p class="mb-2 font-mono text-2xs uppercase tracking-caps text-primary-light">Калькулятор</p>
+          <h2 class="mb-3 text-2xl font-bold leading-tight md:text-3xl lg:text-4xl" id="fee-calc-title">Порахуйте комісію угоди</h2>
+          <p class="mb-9 max-w-[560px] text-sm text-muted md:text-base">
+            Вкажіть суму та курс — комісія й сума до сплати перераховуються одразу,
+            без натискання кнопки.
+          </p>
+
+          <div class="grid gap-6 lg:grid-cols-2">
+            <!-- form без action і без кнопки: розрахунок живий, на подіях input і change -->
+            <form class="p-5 md:p-6 rounded-card border border-line bg-surface" id="fee-form" novalidate>
+              <div class="mb-4">
+                <label class="block mb-1.5 text-2xs text-muted" for="fee-amount">Сума угоди, USDT</label>
+                <!-- no-spinner (style.css): прибирає стрілки числового поля -->
+                <input
+                  class="no-spinner min-h-[46px] w-full border px-3 font-mono text-base text-ink rounded-ui border-line bg-page outline-none transition-colors duration-200 focus:border-primary"
+                  type="number"
+                  id="fee-amount"
+                  name="amount"
+                  value="1000"
+                  min="10"
+                  max="1000000"
+                  step="0.01"
+                  inputmode="decimal"
+                  autocomplete="off"
+                  aria-describedby="fee-amount-error">
+                <p class="mt-1.5 min-h-[1.125rem] text-xs text-danger" id="fee-amount-error" aria-live="polite"></p>
+              </div>
+
+              <div class="mb-4">
+                <label class="block mb-1.5 text-2xs text-muted" for="fee-rate">Курс, UAH за 1 USDT</label>
+                <input
+                  class="no-spinner min-h-[46px] w-full border px-3 font-mono text-base text-ink rounded-ui border-line bg-page outline-none transition-colors duration-200 focus:border-primary"
+                  type="number"
+                  id="fee-rate"
+                  name="rate"
+                  value="41.5"
+                  min="1"
+                  max="1000"
+                  step="0.01"
+                  inputmode="decimal"
+                  autocomplete="off"
+                  aria-describedby="fee-rate-error">
+                <p class="mt-1.5 min-h-[1.125rem] text-xs text-danger" id="fee-rate-error" aria-live="polite"></p>
+              </div>
+
+              <div class="mb-4">
+                <label class="block mb-1.5 text-2xs text-muted" for="fee-type">Тип угоди</label>
+                <select
+                  class="min-h-[46px] w-full border px-2.5 text-sm text-ink rounded-ui border-line bg-page focus:border-primary"
+                  id="fee-type"
+                  name="type"
+                  aria-describedby="fee-type-error">
+                  <option value="p2p">P2P — 1%</option>
+                  <option value="otc">OTC — 0.6%</option>
+                </select>
+                <p class="mt-1.5 min-h-[1.125rem] text-xs text-danger" id="fee-type-error" aria-live="polite"></p>
+              </div>
+
+              <label class="flex items-start gap-2.5 cursor-pointer text-sm" for="fee-insurance">
+                <input class="mt-0.5 h-4 w-4 accent-primary" type="checkbox" id="fee-insurance" name="insurance">
+                <span>Арбітражне страхування <span class="text-muted">(+0.3% до ставки)</span></span>
+              </label>
+            </form>
+
+            <div class="p-5 md:p-6 rounded-card border border-line bg-surface">
+              <p class="mb-4 text-sm font-semibold">Результат розрахунку</p>
+              <!-- aria-live: читач екрана озвучує оновлені суми. Прочерк — коли дані неповні -->
+              <dl class="text-sm" aria-live="polite">
+                <div class="flex items-center justify-between gap-3 border-b py-2.5 border-line">
+                  <dt class="text-muted">Комісія, USDT</dt>
+                  <dd class="font-mono font-semibold" id="fee-commission-usdt">—</dd>
+                </div>
+                <div class="flex items-center justify-between gap-3 border-b py-2.5 border-line">
+                  <dt class="text-muted">Комісія, UAH</dt>
+                  <dd class="font-mono font-semibold" id="fee-commission-uah">—</dd>
+                </div>
+                <div class="flex items-center justify-between gap-3 border-b py-2.5 border-line">
+                  <dt class="text-muted">До сплати, USDT</dt>
+                  <dd class="font-mono font-bold text-primary-light" id="fee-total-usdt">—</dd>
+                </div>
+                <div class="flex items-center justify-between gap-3 py-2.5">
+                  <dt class="text-muted">До сплати, UAH</dt>
+                  <dd class="font-mono font-bold text-primary-light" id="fee-total-uah">—</dd>
+                </div>
+              </dl>
+              <p class="mt-4 text-xs text-muted">
+                Мінімальна комісія — 1 USDT. Розрахунок попередній: остаточна комісія
+                фіксується при створенні угоди.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ЦИФРИ: параметри з правил платформи (тарифи, ескроу, арбітраж), а не маркетингова статистика.
            dl: значення (dd) і його назва (dt); order-* ставить число першим візуально, не змінюючи порядок у DOM -->
       <section class="scroll-mt-20 border-b py-12 md:py-16 lg:py-20 border-line" id="facts" aria-labelledby="facts-title">
