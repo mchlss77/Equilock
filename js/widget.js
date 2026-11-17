@@ -1,0 +1,161 @@
+/* EQUILOCK — калькулятор комісії escrow-угоди (<section id="fee-calc"> на index.html).
+   Live-розрахунок: кнопки немає, перерахунок іде на кожну подію input/change у формі.
+
+   ФОРМУЛА ПО КРОКАХ
+   1. Базова ставка за типом угоди:   P2P → 1% (0.01), OTC → 0.6% (0.006)
+   2. Якщо увімкнено страхування:     ставка += 0.3% (0.003)
+   3. Комісія в USDT:                 сума × ставка, але не менше мінімальної — 1 USDT
+                                      комісія_USDT = max(сума × ставка, 1)
+   4. Комісія в UAH:                  комісія_USDT × курс
+   5. До сплати в USDT:               сума + комісія_USDT
+   6. До сплати в UAH:                до_сплати_USDT × курс
+   7. На екран — із округленням до 2 знаків (Intl, локаль сторінки).
+
+   Округлення — ТІЛЬКИ при виводі. Сама комісія рахується з повного значення суми,
+   тому копійки не губляться в сумі до сплати: 100.555 → комісія 1,01, до сплати 101,56
+   (а не 100,56 + 1,01). Кейс 6 у qa-log.md.
+
+   ВАЛІДАЦІЯ кожного поля перед розрахунком: порожнє значення, не число (разом з Infinity),
+   нуль, мінус і вихід за межі діапазону. Поки хоч одне поле невалідне, у результаті стоять
+   прочерки — на екран не потрапляє ні NaN, ні Infinity, ні undefined, ні від'ємна сума. */
+(() => {
+  const form = document.getElementById("fee-form");
+  if (!form) return; // сторінка без калькулятора — скрипт просто не працює, без шуму в консолі
+
+  // Елемент за id. Форма є, а елемента немає — це зламана розмітка:
+  // попередження в консоль і вихід, замість TypeError на null
+  const pick = (id) => {
+    const el = document.getElementById(id);
+    if (!el) console.warn(`Калькулятор комісії: не знайдено елемент #${id}`);
+    return el;
+  };
+
+  const els = {
+    amount: pick("fee-amount"),
+    rate: pick("fee-rate"),
+    type: pick("fee-type"),
+    insurance: pick("fee-insurance"),
+    amountError: pick("fee-amount-error"),
+    rateError: pick("fee-rate-error"),
+    typeError: pick("fee-type-error"),
+    commissionUsdt: pick("fee-commission-usdt"),
+    commissionUah: pick("fee-commission-uah"),
+    totalUsdt: pick("fee-total-usdt"),
+    totalUah: pick("fee-total-uah"),
+  };
+  if (Object.values(els).some((el) => !el)) return; // попередження вже виведені вище
+
+  const LIMITS = {
+    amount: { min: 10, max: 1000000 },
+    rate: { min: 1, max: 1000 },
+  };
+  const BASE_RATE = { p2p: 0.01, otc: 0.006 }; // ключі = value у <option>
+  const INSURANCE_RATE = 0.003;
+  const MIN_COMMISSION = 1; // USDT
+  const DASH = "—";
+
+  // Мова сторінки (<html lang>) — як у решти скриптів проєкту
+  const en = document.documentElement.lang.startsWith("en");
+  const money = new Intl.NumberFormat(en ? "en-US" : "uk-UA", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  const TEXTS = en
+    ? {
+        amount: {
+          empty: "Enter the amount",
+          notNumber: "Enter a number",
+          range: "Amount — from 10 to 1,000,000 USDT",
+        },
+        rate: { empty: "Enter the rate", notNumber: "Enter a number", range: "Rate — from 1 to 1,000 UAH" },
+        type: "Select the deal type",
+      }
+    : {
+        amount: {
+          empty: "Введіть суму",
+          notNumber: "Введіть число",
+          range: "Сума — від 10 до 1 000 000 USDT",
+        },
+        rate: { empty: "Введіть курс", notNumber: "Введіть число", range: "Курс — від 1 до 1000 UAH" },
+        type: "Виберіть тип угоди",
+      };
+
+  /* --- чисті функції: лише числа, жодного доступу до DOM --- */
+
+  // Рядок з поля → { value } або { error }. Number("") дає 0, тому порожнє ловимо першим,
+  // а !isFinite відсікає і NaN ("abc"), і Infinity
+  const readNumber = (raw, { min, max }, texts) => {
+    const text = String(raw).trim();
+    if (!text) return { error: texts.empty };
+    const value = Number(text);
+    if (!Number.isFinite(value)) return { error: texts.notNumber };
+    if (value < min || value > max) return { error: texts.range };
+    return { value };
+  };
+
+  const feeRate = (type, insured) => BASE_RATE[type] + (insured ? INSURANCE_RATE : 0);
+
+  const calculate = ({ amount, rate, type, insured }) => {
+    const commissionUsdt = Math.max(amount * feeRate(type, insured), MIN_COMMISSION);
+    const totalUsdt = amount + commissionUsdt;
+    return {
+      commissionUsdt,
+      commissionUah: commissionUsdt * rate,
+      totalUsdt,
+      totalUah: totalUsdt * rate,
+    };
+  };
+
+  /* --- вивід --- */
+
+  // Остання перешкода перед екраном: число показуємо лише скінченне й невід'ємне
+  const show = (value) => (Number.isFinite(value) && value >= 0 ? money.format(value) : DASH);
+
+  const setError = (input, errorEl, message) => {
+    errorEl.textContent = message ?? "";
+    if (message) input.setAttribute("aria-invalid", "true");
+    else input.removeAttribute("aria-invalid");
+  };
+
+  const outputs = [els.commissionUsdt, els.commissionUah, els.totalUsdt, els.totalUah];
+
+  const recalculate = () => {
+    const amount = readNumber(els.amount.value, LIMITS.amount, TEXTS.amount);
+    const rate = readNumber(els.rate.value, LIMITS.rate, TEXTS.rate);
+    const type = els.type.value in BASE_RATE ? { value: els.type.value } : { error: TEXTS.type };
+
+    setError(els.amount, els.amountError, amount.error);
+    setError(els.rate, els.rateError, rate.error);
+    setError(els.type, els.typeError, type.error);
+
+    // Невалідне хоч одне поле — прочерки в усіх чотирьох рядках, без часткових результатів
+    if (amount.error || rate.error || type.error) {
+      outputs.forEach((el) => {
+        el.textContent = DASH;
+      });
+      return;
+    }
+
+    const result = calculate({
+      amount: amount.value,
+      rate: rate.value,
+      type: type.value,
+      insured: els.insurance.checked,
+    });
+
+    els.commissionUsdt.textContent = show(result.commissionUsdt);
+    els.commissionUah.textContent = show(result.commissionUah);
+    els.totalUsdt.textContent = show(result.totalUsdt);
+    els.totalUah.textContent = show(result.totalUah);
+  };
+
+  // Два слухачі на всю форму (делегування) замість слухача на кожне поле:
+  // скільки б подій не йшло підряд, нові слухачі не з'являються — кейс 9 у qa-log.md.
+  // Розрахунок синхронний і без побічних ефектів, тому подвійний виклик (input + change
+  // на select і checkbox) дає той самий результат, а вивід завжди відповідає останньому стану полів
+  form.addEventListener("input", recalculate);
+  form.addEventListener("change", recalculate);
+
+  recalculate(); // перший розрахунок — зі значеннями за замовчуванням у розмітці
+})();
