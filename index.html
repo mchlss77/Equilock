@@ -680,16 +680,14 @@
             <form class="p-5 md:p-6 rounded-card border border-line bg-surface" id="fee-form" novalidate>
               <div class="mb-4">
                 <label class="block mb-1.5 text-2xs text-muted" for="fee-amount">Сума угоди, USDT</label>
-                <!-- no-spinner (style.css): прибирає стрілки числового поля -->
+                <!-- type="text" + inputmode="decimal": цифрова клавіатура на телефоні, але кома й пробіли
+                     не губляться (type="number" чистив «41,5» до порожнього). Межі й формат перевіряє js/widget.js -->
                 <input
-                  class="no-spinner min-h-[46px] w-full border px-3 font-mono text-base text-ink rounded-ui border-line bg-page outline-none transition-colors duration-200 focus:border-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
-                  type="number"
+                  class="min-h-[46px] w-full border px-3 font-mono text-base text-ink rounded-ui border-line bg-page outline-none transition-colors duration-200 focus:border-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+                  type="text"
                   id="fee-amount"
                   name="amount"
                   value="1000"
-                  min="10"
-                  max="1000000"
-                  step="0.01"
                   inputmode="decimal"
                   autocomplete="off"
                   required
@@ -700,14 +698,11 @@
               <div class="mb-4">
                 <label class="block mb-1.5 text-2xs text-muted" for="fee-rate">Курс, UAH за 1 USDT</label>
                 <input
-                  class="no-spinner min-h-[46px] w-full border px-3 font-mono text-base text-ink rounded-ui border-line bg-page outline-none transition-colors duration-200 focus:border-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
-                  type="number"
+                  class="min-h-[46px] w-full border px-3 font-mono text-base text-ink rounded-ui border-line bg-page outline-none transition-colors duration-200 focus:border-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+                  type="text"
                   id="fee-rate"
                   name="rate"
                   value="41.5"
-                  min="1"
-                  max="1000"
-                  step="0.01"
                   inputmode="decimal"
                   autocomplete="off"
                   required

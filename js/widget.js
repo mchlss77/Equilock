@@ -83,11 +83,18 @@
 
   /* --- чисті функції: лише числа, жодного доступу до DOM --- */
 
-  // Рядок з поля → { value } або { error }. Number("") дає 0, тому порожнє ловимо першим,
-  // а !isFinite відсікає і NaN ("abc"), і Infinity
+  // Рядок з поля → { value } або { error }. Поля — type="text" + inputmode="decimal":
+  // type="number" мовчки очищав «41,5» і «1 000» до "" (українська клавіатура телефона
+  // має лише кому), і користувач бачив «Введіть курс», хоча курс ввів. Тому тут:
+  // прибираємо пробіли розрядів (звичайні й нерозривні), одну кому вважаємо десятковою
+  // крапкою, а далі приймаємо лише запис «цифри[.цифри]» зі знаком — без 1e3, 0x10 і Infinity.
+  // Порожнє ловимо першим: Number("") дає 0
+  const NUMBER_FORMAT = /^[+-]?(\d+\.?\d*|\.\d+)$/;
+
   const readNumber = (raw, { min, max }, texts) => {
-    const text = String(raw).trim();
+    const text = String(raw).replace(/\s/g, "").replace(",", ".");
     if (!text) return { error: texts.empty };
+    if (!NUMBER_FORMAT.test(text)) return { error: texts.notNumber };
     const value = Number(text);
     if (!Number.isFinite(value)) return { error: texts.notNumber };
     if (value < min || value > max) return { error: texts.range };
