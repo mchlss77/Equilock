@@ -1,7 +1,7 @@
 /* EQUILOCK — автотест калькулятора комісії (ЛР №11). НЕ підключається до сторінки:
    це інструмент QA, який вставляють у консоль Chrome на index.html.
 
-   Проганяє 3 Happy Path і 10 кейсів із qa-log.md: сам ставить значення в поля,
+   Проганяє 3 Happy Path і 12 кейсів із qa-log.md (10 із тест-плану + 2 на результати Аудиту 4): сам ставить значення в поля,
    кидає події input/change, наприкінці повертає форму в початковий стан
    і виводить console.table: № | ввід | очікувано | фактично | OK/FAIL.
 
@@ -82,26 +82,40 @@
   const toNumber = (text) => Number(text.replace(/\s/g, "").replace(",", "."));
   const round2 = (value) => Math.round(value * 100) / 100;
 
-  // Числовий результат: порівнюємо з очікуваним, округленим до 2 знаків
+  const INPUTS = ["amount", "rate", "type"];
+  const redBordered = () => INPUTS.filter((key) => els[key].classList.contains("border-danger"));
+
+  // Числовий результат: порівнюємо з очікуваним, округленим до 2 знаків.
+  // Заразом перевіряємо, що червоної рамки не лишилося ні на одному полі
   const expectNumbers = (expected) => {
     const texts = read();
-    const ok = expected.every((value, i) => Math.abs(toNumber(texts[i]) - round2(value)) < 0.005);
-    return { ok, actual: texts.join(" / ") };
+    const red = redBordered();
+    const numbersOk = expected.every((value, i) => Math.abs(toNumber(texts[i]) - round2(value)) < 0.005);
+    return {
+      ok: numbersOk && red.length === 0,
+      actual: texts.join(" / ") + (red.length ? ` · червона рамка лишилась: ${red.join(", ")}` : ""),
+    };
   };
 
-  // Невалідний ввід: усі чотири рядки — прочерк, під полем є текст помилки
-  const expectDashes = (errorKey) => {
+  // Невалідний ввід: прочерки в усіх чотирьох рядках, текст помилки під полем
+  // і червона рамка саме на цьому полі (не на сусідніх)
+  const expectInvalid = (fieldKey) => {
     const texts = read();
-    const message = els[errorKey].textContent.trim();
+    const message = els[`${fieldKey}Error`].textContent.trim();
+    const red = redBordered();
     return {
-      ok: texts.every((text) => text === DASH) && message.length > 0,
-      actual: `${texts.join(" / ")} · помилка: "${message || "немає"}"`,
+      ok:
+        texts.every((text) => text === DASH) &&
+        message.length > 0 &&
+        red.length === 1 &&
+        red[0] === fieldKey,
+      actual: `${texts.join(" / ")} · помилка: "${message || "немає"}" · рамка: ${red.join(", ") || "немає"}`,
     };
   };
 
   const expectedText = (values) => values.map((value) => money.format(round2(value))).join(" / ");
 
-  /* --- кейси: 3 Happy Path + 10 із тест-плану --- */
+  /* --- кейси: 3 Happy Path + 10 із тест-плану + 2 за Аудитом 4 --- */
 
   const cases = [
     {
@@ -143,37 +157,37 @@
     {
       no: 2,
       input: "порожнє поле суми",
-      expectedText: "прочерки + підказка під полем суми",
+      expectedText: "прочерки + підказка під полем + червона рамка на полі суми",
       run() {
         setState({ amount: "" });
-        return expectDashes("amountError");
+        return expectInvalid("amount");
       },
     },
     {
       no: 3,
       input: "сума 0",
-      expectedText: "прочерки + повідомлення про діапазон 10–1 000 000",
+      expectedText: "прочерки + діапазон 10–1 000 000 + червона рамка",
       run() {
         setState({ amount: 0 });
-        return expectDashes("amountError");
+        return expectInvalid("amount");
       },
     },
     {
       no: 4,
       input: "сума -500",
-      expectedText: "прочерки + помилка, від'ємних сум на екрані немає",
+      expectedText: "прочерки + червона рамка, від'ємних сум на екрані немає",
       run() {
         setState({ amount: -500 });
-        return expectDashes("amountError");
+        return expectInvalid("amount");
       },
     },
     {
       no: 5,
       input: "сума 9999999999999999",
-      expectedText: "прочерки + «максимум», без 1e+16 на екрані",
+      expectedText: "прочерки + червона рамка, без 1e+16 на екрані",
       run() {
         setState({ amount: 9999999999999999 });
-        return expectDashes("amountError");
+        return expectInvalid("amount");
       },
     },
     {
@@ -248,6 +262,44 @@
         return {
           ok: !thrown && restOk,
           actual: thrown ? `виняток: ${thrown.name}: ${thrown.message}` : `без винятку · ${rest.join(" / ")}`,
+        };
+      },
+    },
+    {
+      no: 11,
+      input: "поле суми у фокусі, значення 5 (нижче мінімуму), далі вихід із поля",
+      expectedText: "у фокусі: прочерки без рамки й тексту; після виходу — рамка й текст помилки",
+      run() {
+        setState({ amount: 1000, rate: 41.5, type: "p2p", insured: false });
+        els.amount.focus();
+        put(els.amount, 5);
+        const during = { texts: read(), red: redBordered(), msg: els.amountError.textContent.trim() };
+        els.amount.blur(); // focusout → розрахунок повторюється і помилку вже показує
+        const after = { texts: read(), red: redBordered(), msg: els.amountError.textContent.trim() };
+        return {
+          ok:
+            during.texts.every((text) => text === DASH) &&
+            during.red.length === 0 &&
+            during.msg === "" &&
+            after.texts.every((text) => text === DASH) &&
+            after.red.length === 1 &&
+            after.red[0] === "amount" &&
+            after.msg.length > 0,
+          actual:
+            `у фокусі: рамка ${during.red.join(", ") || "немає"}, текст "${during.msg}"` +
+            ` · після виходу: рамка ${after.red.join(", ") || "немає"}, текст "${after.msg}"`,
+        };
+      },
+    },
+    {
+      no: 12,
+      input: "класи індикатора фокуса на полях",
+      expectedText: "focus-visible:ring-2 на всіх трьох полях (контур outline-none прозорий)",
+      run() {
+        const without = INPUTS.filter((key) => !els[key].classList.contains("focus-visible:ring-2"));
+        return {
+          ok: without.length === 0,
+          actual: without.length ? `рінга немає: ${without.join(", ")}` : "рінг є на всіх трьох полях",
         };
       },
     },

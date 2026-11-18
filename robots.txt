@@ -1,0 +1,5 @@
+# EQUILOCK — дозволено індексувати весь сайт
+User-agent: *
+Allow: /
+
+Sitemap: https://equilock-lovat.vercel.app/sitemap.xml

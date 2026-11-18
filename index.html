@@ -8,14 +8,31 @@
     <meta
       name="description"
       content="EQUILOCK — ескроу-платформа для P2P та OTC обміну USDT/UAH. Multisig 2-of-3, фіксація курсу, Same-Name верифікація та незалежний арбітраж.">
+    <!-- Канонічна адреса й Open Graph: одна адреса сторінки для пошуковиків і превʼю посилання в соцмережах/месенджерах -->
+    <link rel="canonical" href="https://equilock-lovat.vercel.app/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="EQUILOCK">
+    <meta property="og:locale" content="uk_UA">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:title" content="EQUILOCK — безпечні P2P та OTC криптоугоди з ескроу">
+    <meta property="og:description" content="EQUILOCK — ескроу-платформа для P2P та OTC обміну USDT/UAH. Multisig 2-of-3, фіксація курсу, Same-Name верифікація та незалежний арбітраж.">
+    <meta property="og:url" content="https://equilock-lovat.vercel.app/">
+    <meta property="og:image" content="https://equilock-lovat.vercel.app/assets/images/og-image-uk.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="EQUILOCK — платформа-гарант для безпечних P2P та OTC криптоугод">
+    <meta name="twitter:card" content="summary_large_image">
     <!-- Іконка вкладки з assets -->
-    <link rel="icon" type="image/png" href="assets/icons/logo-mark.png">
+    <link rel="icon" type="image/webp" href="assets/icons/logo-mark.webp">
     <!-- Мовні версії сторінки (для пошуковиків) -->
-    <link rel="alternate" hreflang="uk" href="index.html">
-    <link rel="alternate" hreflang="en" href="en/index.html">
+    <link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/">
+    <link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/">
+    <link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/">
 
-    <!-- Тема (темна/світла) — до стилів і без defer, щоб не було спалаху іншої теми -->
-    <script src="js/theme.js"></script>
+    <!-- Тема (темна/світла): inline-рядок ставить data-theme ще до відмалювання (без спалаху іншої теми
+         і без блокуючого запиту); кнопки перемикача — js/theme.js з defer -->
+    <script>try{document.documentElement.dataset.theme=localStorage.getItem("equilock-theme")==="light"?"light":"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
+    <script src="js/theme.js" defer></script>
 
     <!-- Шрифти Manrope і JetBrains Mono — локально (assets/fonts, @font-face у css/tailwind.css).
          preload — основний шрифт для кирилиці, щоб текст швидше отримав фірмовий шрифт -->
@@ -24,9 +41,16 @@
     <!-- Font Awesome 6.7.2 — локально (assets/vendor/fontawesome); той самий файл, що був на CDN -->
     <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
 
-    <!-- Swiper 11 і Fancybox 5 (CDN) — слайдер «Як це працює»; до власних стилів, щоб їх можна було перекрити -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css">
+    <!-- Swiper 11 і Fancybox 5 (CDN) — слайдер «Як це працює»; до власних стилів, щоб їх можна було перекрити.
+         Слайдер нижче першого екрана, тому стилі не блокують відмалювання: media="print" → "all" після
+         завантаження (місце в каскаді те саме). preconnect — зʼєднання з CDN відкривається заздалегідь -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css">
+    </noscript>
 
     <!-- Власні стилі -->
     <link rel="stylesheet" href="css/style.css">
@@ -52,16 +76,15 @@
          ховає курси при прокрутці, а панель з меню лишається видимою.
          data-header — точка входу для js/header.js -->
     <header class="sticky -top-7 z-10" data-header>
-      <!-- aside: курси — додаткова інформація, не пов'язана з основним вмістом -->
-      <aside
+      <!-- Рядок курсів: div, а не aside — орієнтир complementary не може бути всередині header (banner) -->
+      <div
         class="flex items-center overflow-hidden h-7 border-b px-4 md:px-6 lg:px-8 whitespace-nowrap font-mono text-2xs text-muted border-line bg-page"
-        aria-label="Поточні курси"
         data-ticker
       >
         <!-- ===== РЯДОК КУРСІВ: живі дані CoinGecko (js/ticker.js), один запит на всі пари =====
              До відповіді й при помилці — «—»; зміна за 24 год зелена/червона. BTC і ETH — у USD,
              бо CoinGecko не підтримує USDT як валюту порівняння. Стан озвучує sr-only рядок нижче. -->
-        <ul class="flex gap-5 sm:justify-center sm:gap-10 w-full">
+        <ul class="flex gap-5 sm:justify-center sm:gap-10 w-full" aria-label="Поточні курси">
           <li data-ticker-coin="tether" data-ticker-vs="uah" data-ticker-digits="2">
             <span class="mr-1.5 font-bold text-ink">USDT/UAH</span> <span data-ticker-price>—</span> UAH
             <span class="text-muted" data-ticker-change></span>
@@ -77,7 +100,7 @@
         </ul>
         <p class="sr-only" aria-live="polite" data-ticker-status>Завантаження курсів…</p>
         <!-- ===== /РЯДОК КУРСІВ ===== -->
-      </aside>
+      </div>
 
       <div class="border-b border-line bg-page/90 backdrop-blur">
         <!-- flex-wrap: на mobile відкрите меню (basis-full) переноситься на новий рядок під логотип -->
@@ -450,28 +473,28 @@
           <div class="swiper how__slider">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
-                <a href="assets/images/step1.png" data-fancybox="equilock-steps" data-caption="Крок 1 — Створення угоди">
-                  <img src="assets/images/step1.png" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 1: Створення угоди">
+                <a href="assets/images/step1-1200.webp" data-fancybox="equilock-steps" data-caption="Крок 1 — Створення угоди">
+                  <img src="assets/images/step1-960.webp" srcset="assets/images/step1-640.webp 640w, assets/images/step1-960.webp 960w, assets/images/step1-1200.webp 1200w" sizes="(min-width: 1056px) 992px, calc(100vw - 32px)" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 1: Створення угоди">
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="assets/images/step2.png" data-fancybox="equilock-steps" data-caption="Крок 2 — Депозит USDT в escrow">
-                  <img src="assets/images/step2.png" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 2: Депозит USDT в escrow">
+                <a href="assets/images/step2-1200.webp" data-fancybox="equilock-steps" data-caption="Крок 2 — Депозит USDT в escrow">
+                  <img src="assets/images/step2-960.webp" srcset="assets/images/step2-640.webp 640w, assets/images/step2-960.webp 960w, assets/images/step2-1200.webp 1200w" sizes="(min-width: 1056px) 992px, calc(100vw - 32px)" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 2: Депозит USDT в escrow">
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="assets/images/step3.png" data-fancybox="equilock-steps" data-caption="Крок 3 — Оплата в гривні">
-                  <img src="assets/images/step3.png" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 3: Оплата в гривні">
+                <a href="assets/images/step3-1200.webp" data-fancybox="equilock-steps" data-caption="Крок 3 — Оплата в гривні">
+                  <img src="assets/images/step3-960.webp" srcset="assets/images/step3-640.webp 640w, assets/images/step3-960.webp 960w, assets/images/step3-1200.webp 1200w" sizes="(min-width: 1056px) 992px, calc(100vw - 32px)" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 3: Оплата в гривні">
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="assets/images/step4.png" data-fancybox="equilock-steps" data-caption="Крок 4 — Підтвердження оплати">
-                  <img src="assets/images/step4.png" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 4: Підтвердження оплати">
+                <a href="assets/images/step4-1200.webp" data-fancybox="equilock-steps" data-caption="Крок 4 — Підтвердження оплати">
+                  <img src="assets/images/step4-960.webp" srcset="assets/images/step4-640.webp 640w, assets/images/step4-960.webp 960w, assets/images/step4-1200.webp 1200w" sizes="(min-width: 1056px) 992px, calc(100vw - 32px)" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 4: Підтвердження оплати">
                 </a>
               </div>
               <div class="swiper-slide">
-                <a href="assets/images/step5.png" data-fancybox="equilock-steps" data-caption="Крок 5 — Виплата коштів">
-                  <img src="assets/images/step5.png" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 5: Виплата коштів">
+                <a href="assets/images/step5-1200.webp" data-fancybox="equilock-steps" data-caption="Крок 5 — Виплата коштів">
+                  <img src="assets/images/step5-960.webp" srcset="assets/images/step5-640.webp 640w, assets/images/step5-960.webp 960w, assets/images/step5-1200.webp 1200w" sizes="(min-width: 1056px) 992px, calc(100vw - 32px)" width="1200" height="800" loading="lazy" decoding="async" alt="Крок 5: Виплата коштів">
                 </a>
               </div>
             </div>
@@ -659,7 +682,7 @@
                 <label class="block mb-1.5 text-2xs text-muted" for="fee-amount">Сума угоди, USDT</label>
                 <!-- no-spinner (style.css): прибирає стрілки числового поля -->
                 <input
-                  class="no-spinner min-h-[46px] w-full border px-3 font-mono text-base text-ink rounded-ui border-line bg-page outline-none transition-colors duration-200 focus:border-primary"
+                  class="no-spinner min-h-[46px] w-full border px-3 font-mono text-base text-ink rounded-ui border-line bg-page outline-none transition-colors duration-200 focus:border-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                   type="number"
                   id="fee-amount"
                   name="amount"
@@ -669,6 +692,7 @@
                   step="0.01"
                   inputmode="decimal"
                   autocomplete="off"
+                  required
                   aria-describedby="fee-amount-error">
                 <p class="mt-1.5 min-h-[1.125rem] text-xs text-danger" id="fee-amount-error" aria-live="polite"></p>
               </div>
@@ -676,7 +700,7 @@
               <div class="mb-4">
                 <label class="block mb-1.5 text-2xs text-muted" for="fee-rate">Курс, UAH за 1 USDT</label>
                 <input
-                  class="no-spinner min-h-[46px] w-full border px-3 font-mono text-base text-ink rounded-ui border-line bg-page outline-none transition-colors duration-200 focus:border-primary"
+                  class="no-spinner min-h-[46px] w-full border px-3 font-mono text-base text-ink rounded-ui border-line bg-page outline-none transition-colors duration-200 focus:border-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                   type="number"
                   id="fee-rate"
                   name="rate"
@@ -686,6 +710,7 @@
                   step="0.01"
                   inputmode="decimal"
                   autocomplete="off"
+                  required
                   aria-describedby="fee-rate-error">
                 <p class="mt-1.5 min-h-[1.125rem] text-xs text-danger" id="fee-rate-error" aria-live="polite"></p>
               </div>
@@ -693,9 +718,10 @@
               <div class="mb-4">
                 <label class="block mb-1.5 text-2xs text-muted" for="fee-type">Тип угоди</label>
                 <select
-                  class="min-h-[46px] w-full border px-2.5 text-sm text-ink rounded-ui border-line bg-page focus:border-primary"
+                  class="min-h-[46px] w-full border px-2.5 text-sm text-ink rounded-ui border-line bg-page focus:border-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                   id="fee-type"
                   name="type"
+                  required
                   aria-describedby="fee-type-error">
                   <option value="p2p">P2P — 1%</option>
                   <option value="otc">OTC — 0.6%</option>
@@ -977,7 +1003,7 @@
           <div
             class="relative overflow-x-auto mt-6 border rounded-card border-line bg-surface"
             role="region"
-            aria-labelledby="compare-title"
+            aria-label="Таблиця порівняння з P2P-біржами та Telegram-чатами"
             tabindex="0"
           >
             <!-- table: дані справді табличні; th + scope зв'язують клітинки із заголовками.
@@ -1600,10 +1626,10 @@
     </footer>
 
     <!-- Swiper 11 і Fancybox 5 (CDN) + ініціалізація галереї «5 кроків». Порядок важливий:
-         бібліотеки мають бути завантажені до js/gallery.js -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js"></script>
-    <script src="js/gallery.js"></script>
+         бібліотеки мають бути завантажені до js/gallery.js (defer зберігає порядок виконання) -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js" defer></script>
+    <script src="js/gallery.js" defer></script>
   </body>
 </html>

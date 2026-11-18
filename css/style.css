@@ -24,12 +24,18 @@
   --c-muted: 156 163 175; /* #9CA3AF */
   --c-line: 35 39 51; /* #232733 */
   --c-primary-light: 224 231 255; /* #E0E7FF */
+  /* Текст і посилання кольору бренду: #6366F1 на темному тлі дає лише ~4.0–4.4:1,
+     #818CF8 (indigo-400) — 5.6–6.5:1 (WCAG AA). Читає .text-primary у css/tailwind.css */
+  --c-primary-text: 129 140 248; /* #818CF8 */
   --c-success: 34 197 94; /* #22C55E */
-  --c-danger: 239 68 68; /* #EF4444 */
+  /* red-400 замість #EF4444: той на --c-elevated і на hover-тлі danger/10 мав 4.0–4.4:1 */
+  --c-danger: 248 113 113; /* #F87171 */
   --c-accent: 245 158 11; /* #F59E0B */
   color-scheme: dark;
 
-  --color-brand: #6366f1;
+  --color-brand: #6366f1; /* лише нетекстові елементи (смуга таймера, рамка фокуса): потрібно 3:1, є 4.3:1 */
+  --color-button: #4f46e5; /* фон кнопок: білий текст 6.3:1 (на #6366F1 було 4.47:1) */
+  --color-button-hover: #4338ca; /* 7.9:1 */
   --color-success: rgb(var(--c-success));
   --color-border: rgb(var(--c-line));
   --color-focus: var(--color-brand);
@@ -49,7 +55,6 @@
      (transition, duration-150/200/300), тому правило нижче вимикає всі переходи сторінки */
   --duration-fast: 150ms;
   --duration-base: 200ms;
-  --duration-slow: 300ms;
 }
 
 /* Світла тема (кнопка-перемикач у шапці, js/theme.js ставить data-theme="light" на <html>).
@@ -63,6 +68,7 @@
   --c-muted: 75 85 99; /* gray-600 — 7.6:1 на білому */
   --c-line: 209 213 219; /* gray-300 */
   --c-primary-light: 67 56 202; /* indigo-700 — 7.9:1 на білому */
+  --c-primary-text: 79 70 229; /* #4F46E5 — 5.7–6.0:1 (#6366F1 на світлому тлі — лише 4.3–4.5:1) */
   --c-success: 22 101 52; /* green-800 — AA і на блідо-зеленому тлі плашок */
   --c-danger: 185 28 28; /* red-700 */
   --c-accent: 146 64 14; /* amber-800 — AA і на блідо-бурштиновому тлі */
@@ -75,7 +81,6 @@
   :root {
     --duration-fast: 0ms;
     --duration-base: 0ms;
-    --duration-slow: 0ms;
   }
 }
 
@@ -86,6 +91,21 @@
    (наприклад, біла рамка в CTA-банері)
    ========================================================= */
 :focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Поля форм: у розмітці є outline-none (Tailwind підключено пізніше, тож він перебиває правило вище),
+   а зміна кольору рамки при фокусі ледь помітна — тому кільце фокуса задано явно.
+   Специфічність вища за .focus-visible:outline-none, тож порядок файлів не важливий.
+   Поля з кільцем ring-* (калькулятор комісії) і поля без власної рамки не чіпаємо */
+:is(input, select, textarea):focus-visible:not([class~="border-0"]):not([class*="focus-visible:ring"]) {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Поле без рамки всередині обгортки (з іконкою, підписом чи валютою): кільце — на обгортці, де й видима рамка */
+[class~="focus-within:border-primary"]:has(:is(input, select, textarea)[class~="border-0"]:focus-visible) {
   outline: var(--focus-ring);
   outline-offset: 2px;
 }
@@ -132,7 +152,7 @@
 .faq-item summary::after {
   content: "\2b";
   flex-shrink: 0;
-  color: var(--color-brand);
+  color: rgb(var(--c-primary-text));
   font-family: var(--font-family-icons);
   font-weight: var(--font-weight-icon-solid);
   transition: transform var(--duration-base) ease;
@@ -313,6 +333,7 @@ header[data-header] [aria-controls="main-nav"] {
 
 .stats-strip > div:hover {
   background: rgb(var(--c-elevated));
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.45);
 }
 
 .stats-strip > div:first-child {
@@ -414,10 +435,6 @@ body [class~="focus-within:shadow-card-hover"]:focus-within {
   transform: translateY(-2px);
 }
 
-.stats-strip > div:hover {
-  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.45);
-}
-
 /* «Менше анімації» в системі: лише підсвічування, без руху */
 @media (prefers-reduced-motion: reduce) {
   body [class~="hover:shadow-card-hover"]:hover,
@@ -465,14 +482,47 @@ body [class~="focus-within:shadow-card-hover"]:focus-within {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--color-brand);
+  background: var(--color-button);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
   transition: background-color var(--duration-base) ease;
 }
 
 .how__slider .swiper-button-prev:hover,
 .how__slider .swiper-button-next:hover {
-  background: #4f46e5; /* primary-dark — колір hover кнопок сайту */
+  background: var(--color-button-hover); /* як hover:bg-primary-hover у кнопок сайту */
+}
+
+/* Точки пагінації: видима крапка лишається 8px, а сам елемент (ціль натискання) — 48×48px.
+   Swiper малює крапку фоном самого елемента, тому фон перенесено на ::before */
+.how__slider {
+  --swiper-pagination-bottom: 0px;
+  --swiper-pagination-bullet-horizontal-gap: 0px; /* відстань між крапками дає сама ширина цілі */
+}
+
+.how__slider .swiper-pagination-bullet {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: transparent;
+  opacity: 1;
+}
+
+.how__slider .swiper-pagination-bullet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 8px;
+  height: 8px;
+  margin: auto;
+  border-radius: 50%;
+  background: var(--swiper-pagination-bullet-inactive-color);
+  opacity: 0.6;
+}
+
+.how__slider .swiper-pagination-bullet-active::before {
+  background: var(--swiper-pagination-color);
+  opacity: 1;
 }
 
 .how__slider .swiper-button-prev::after,
@@ -500,7 +550,7 @@ body [class~="focus-within:shadow-card-hover"]:focus-within {
 
 /* Курсор Typed.js — кольором бренду, щоб читався як частина підзаголовка */
 .hero-typed .typed-cursor {
-  color: var(--color-brand);
+  color: rgb(var(--c-primary-text));
   font-weight: 400;
 }
 
@@ -509,4 +559,34 @@ body [class~="focus-within:shadow-card-hover"]:focus-within {
   .hero-typed .typed-cursor {
     animation: none;
   }
+}
+
+/* =========================================================
+   14. ДОСТУПНІСТЬ НА MOBILE (ЛР11)
+   Ціль натискання — не менше 48×48px (у розмітці переважно min-h-[44px]).
+   Inline-посилання в тексті не зачіпає: min-height/min-width на inline-елементи не діють.
+   Поля форм — 16px: менший шрифт змушує iOS Safari збільшувати сторінку при фокусі
+   ========================================================= */
+@media (max-width: 767px) {
+  :is(a[href], button, summary, select, [role="button"]):not(.sr-only),
+  input:not([type="checkbox"], [type="radio"], [type="hidden"], .sr-only),
+  label:has(> input[type="checkbox"], > input[type="radio"]) {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* :is() бере специфічність найсильнішого аргументу (0,1,1) — інакше select і textarea
+     програють класам text-sm / text-xs із tailwind.css */
+  :is(input:not([type="checkbox"], [type="radio"], [type="range"]), select, textarea) {
+    font-size: 16px;
+  }
+}
+
+/* =========================================================
+   15. ЗНАЧКИ МОНЕТ У КАТАЛОЗІ
+   Білий текст на світлих фірмових кольорах (BTC, ETH, USDT, TON, BNB) дає 1.8–3.7:1;
+   темний — 5.3–11:1. Колір фіксований: фон значка не залежить від теми
+   ========================================================= */
+.coin-ink {
+  color: #0b0d11;
 }

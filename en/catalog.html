@@ -8,14 +8,31 @@
     <meta
       name="description"
       content="Live quotes for BTC, ETH, USDT, BNB, SOL, XRP and TON in dollars and hryvnias. Pick a coin and open a protected escrow deal.">
+    <!-- Канонічна адреса й Open Graph: одна адреса сторінки для пошуковиків і превʼю посилання в соцмережах/месенджерах -->
+    <link rel="canonical" href="https://equilock-lovat.vercel.app/en/catalog.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="EQUILOCK">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="uk_UA">
+    <meta property="og:title" content="Crypto catalog — EQUILOCK">
+    <meta property="og:description" content="Live quotes for BTC, ETH, USDT, BNB, SOL, XRP and TON in dollars and hryvnias. Pick a coin and open a protected escrow deal.">
+    <meta property="og:url" content="https://equilock-lovat.vercel.app/en/catalog.html">
+    <meta property="og:image" content="https://equilock-lovat.vercel.app/assets/images/og-image-en.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="EQUILOCK — escrow platform for safe P2P and OTC crypto deals">
+    <meta name="twitter:card" content="summary_large_image">
     <!-- Іконка вкладки з assets -->
-    <link rel="icon" type="image/png" href="../assets/icons/logo-mark.png">
+    <link rel="icon" type="image/webp" href="../assets/icons/logo-mark.webp">
     <!-- Мовні версії сторінки (для пошуковиків) -->
-    <link rel="alternate" hreflang="uk" href="../catalog.html">
-    <link rel="alternate" hreflang="en" href="catalog.html">
+    <link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/catalog.html">
+    <link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/catalog.html">
+    <link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/catalog.html">
 
-    <!-- Тема (темна/світла) — до стилів і без defer, щоб не було спалаху іншої теми -->
-    <script src="../js/theme.js"></script>
+    <!-- Тема (темна/світла): inline-рядок ставить data-theme ще до відмалювання (без спалаху іншої теми
+         і без блокуючого запиту); кнопки перемикача — js/theme.js з defer -->
+    <script>try{document.documentElement.dataset.theme=localStorage.getItem("equilock-theme")==="light"?"light":"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
+    <script src="../js/theme.js" defer></script>
 
     <!-- Шрифти Manrope і JetBrains Mono — локально (assets/fonts, @font-face у css/tailwind.css).
          preload — основний шрифт для кирилиці, щоб текст швидше отримав фірмовий шрифт -->
@@ -47,16 +64,15 @@
          ховає курси при прокрутці, а панель з меню лишається видимою.
          data-header — точка входу для js/header.js -->
     <header class="sticky -top-7 z-10" data-header>
-      <!-- aside: курси — додаткова інформація, не пов'язана з основним вмістом -->
-      <aside
+      <!-- Рядок курсів: div, а не aside — орієнтир complementary не може бути всередині header (banner) -->
+      <div
         class="flex items-center overflow-hidden h-7 border-b px-4 md:px-6 lg:px-8 whitespace-nowrap font-mono text-2xs text-muted border-line bg-page"
-        aria-label="Current rates"
         data-ticker
       >
         <!-- ===== РЯДОК КУРСІВ: живі дані CoinGecko (js/ticker.js), один запит на всі пари =====
              До відповіді й при помилці — «—»; зміна за 24 год зелена/червона. BTC і ETH — у USD,
              бо CoinGecko не підтримує USDT як валюту порівняння. Стан озвучує sr-only рядок нижче. -->
-        <ul class="flex gap-5 sm:justify-center sm:gap-10 w-full">
+        <ul class="flex gap-5 sm:justify-center sm:gap-10 w-full" aria-label="Current rates">
           <li data-ticker-coin="tether" data-ticker-vs="uah" data-ticker-digits="2">
             <span class="mr-1.5 font-bold text-ink">USDT/UAH</span> <span data-ticker-price>—</span> UAH
             <span class="text-muted" data-ticker-change></span>
@@ -72,7 +88,7 @@
         </ul>
         <p class="sr-only" aria-live="polite" data-ticker-status>Loading rates…</p>
         <!-- ===== /РЯДОК КУРСІВ ===== -->
-      </aside>
+      </div>
 
       <div class="border-b border-line bg-page/90 backdrop-blur">
         <!-- flex-wrap: на mobile відкрите меню (basis-full) переноситься на новий рядок під логотип -->
@@ -310,7 +326,7 @@
           </form>
 
           <!-- Таблиця прокручується всередині своєї рамки, сторінка — ні -->
-          <div class="relative overflow-x-auto border rounded-card border-line bg-surface" tabindex="0" role="region" aria-labelledby="coins-title">
+          <div class="relative overflow-x-auto border rounded-card border-line bg-surface" tabindex="0" role="region" aria-label="Quotes table">
             <table class="w-full min-w-[880px] border-collapse text-sm">
               <caption class="sr-only">Prices, 24-hour change, volume and market cap of coins</caption>
               <thead class="text-left text-xs text-muted">
@@ -331,7 +347,7 @@
                   <td class="font-mono text-xs text-muted" data-f="rank">1</td>
                   <th class="text-left font-normal" scope="row">
                     <span class="flex items-center gap-2.5">
-                      <span class="inline-flex shrink-0 items-center justify-center h-8 w-8 font-mono text-[9px] font-bold text-white rounded-full bg-[#F7931A]" aria-hidden="true">BTC</span>
+                      <span class="inline-flex shrink-0 items-center justify-center h-8 w-8 font-mono text-[9px] font-bold coin-ink rounded-full bg-[#F7931A]" aria-hidden="true">BTC</span>
                       <span><span class="block font-semibold">Bitcoin</span><span class="font-mono text-3xs text-muted">BTC</span></span>
                       <span class="inline-flex items-center border px-1.5 py-px font-mono text-3xs rounded text-primary-light border-primary/40">P2P</span>
                     </span>
@@ -348,7 +364,7 @@
                   <td class="font-mono text-xs text-muted" data-f="rank">2</td>
                   <th class="text-left font-normal" scope="row">
                     <span class="flex items-center gap-2.5">
-                      <span class="inline-flex shrink-0 items-center justify-center h-8 w-8 font-mono text-[9px] font-bold text-white rounded-full bg-[#627EEA]" aria-hidden="true">ETH</span>
+                      <span class="inline-flex shrink-0 items-center justify-center h-8 w-8 font-mono text-[9px] font-bold coin-ink rounded-full bg-[#627EEA]" aria-hidden="true">ETH</span>
                       <span><span class="block font-semibold">Ethereum</span><span class="font-mono text-3xs text-muted">ETH</span></span>
                       <span class="inline-flex items-center border px-1.5 py-px font-mono text-3xs rounded text-primary-light border-primary/40">P2P</span>
                     </span>
@@ -365,7 +381,7 @@
                   <td class="font-mono text-xs text-muted" data-f="rank">3</td>
                   <th class="text-left font-normal" scope="row">
                     <span class="flex items-center gap-2.5">
-                      <span class="inline-flex shrink-0 items-center justify-center h-8 w-8 font-mono text-[9px] font-bold text-white rounded-full bg-[#26A17B]" aria-hidden="true">USD</span>
+                      <span class="inline-flex shrink-0 items-center justify-center h-8 w-8 font-mono text-[9px] font-bold coin-ink rounded-full bg-[#26A17B]" aria-hidden="true">USD</span>
                       <span><span class="block font-semibold">Tether</span><span class="font-mono text-3xs text-muted">USDT</span></span>
                       <span class="inline-flex items-center border px-1.5 py-px font-mono text-3xs rounded text-primary-light border-primary/40">P2P</span>
                     </span>
@@ -382,7 +398,7 @@
                   <td class="font-mono text-xs text-muted" data-f="rank">4</td>
                   <th class="text-left font-normal" scope="row">
                     <span class="flex items-center gap-2.5">
-                      <span class="inline-flex shrink-0 items-center justify-center h-8 w-8 font-mono text-[9px] font-bold text-page rounded-full bg-[#F3BA2F]" aria-hidden="true">BNB</span>
+                      <span class="inline-flex shrink-0 items-center justify-center h-8 w-8 font-mono text-[9px] font-bold coin-ink rounded-full bg-[#F3BA2F]" aria-hidden="true">BNB</span>
                       <span><span class="block font-semibold">BNB</span><span class="font-mono text-3xs text-muted">BNB</span></span>
                     </span>
                   </th>
@@ -431,7 +447,7 @@
                   <td class="font-mono text-xs text-muted" data-f="rank">7</td>
                   <th class="text-left font-normal" scope="row">
                     <span class="flex items-center gap-2.5">
-                      <span class="inline-flex shrink-0 items-center justify-center h-8 w-8 font-mono text-[9px] font-bold text-white rounded-full bg-[#0098EA]" aria-hidden="true">TON</span>
+                      <span class="inline-flex shrink-0 items-center justify-center h-8 w-8 font-mono text-[9px] font-bold coin-ink rounded-full bg-[#0098EA]" aria-hidden="true">TON</span>
                       <span><span class="block font-semibold">Toncoin</span><span class="font-mono text-3xs text-muted">TON</span></span>
                       <span class="inline-flex items-center border px-1.5 py-px font-mono text-3xs rounded text-primary-light border-primary/40">P2P</span>
                     </span>

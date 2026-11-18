@@ -112,15 +112,47 @@
   // Остання перешкода перед екраном: число показуємо лише скінченне й невід'ємне
   const show = (value) => (Number.isFinite(value) && value >= 0 ? money.format(value) : DASH);
 
+  // Рамка поля: червона, поки є помилка. У готовому css/tailwind.css є лише border-danger,
+  // тому focus:border-primary треба саме зняти — інакше у фокусі рамка знову синіє
+  // і помилку не видно. Повертаємо класи назад, щойно поле виправили
+  const VALID_BORDER = ["border-line", "focus:border-primary"];
+
   const setError = (input, errorEl, message) => {
+    // Поки поле у фокусі, помилку не показуємо: «5» на шляху до «50» — ще не помилка,
+    // і червоніти на півслові було б неприємно. Зворотний зв'язок усе одно є —
+    // у результаті стоять прочерки. Текст і рамка з'являються, коли поле лишають
+    // (слухач focusout нижче знову запускає розрахунок)
+    if (message && document.activeElement === input) message = "";
+
     errorEl.textContent = message ?? "";
-    if (message) input.setAttribute("aria-invalid", "true");
-    else input.removeAttribute("aria-invalid");
+    if (message) {
+      input.classList.remove(...VALID_BORDER);
+      input.classList.add("border-danger");
+      input.setAttribute("aria-invalid", "true");
+    } else {
+      input.classList.remove("border-danger");
+      input.classList.add(...VALID_BORDER);
+      input.removeAttribute("aria-invalid");
+    }
   };
 
   const outputs = [els.commissionUsdt, els.commissionUah, els.totalUsdt, els.totalUah];
 
+  // Блок результату — жива область (aria-live), а розрахунок іде на кожне натискання клавіші.
+  // Без цього читач екрана озвучував би всі чотири суми на кожну набрану цифру. Поки триває
+  // набір, тримаємо aria-busy="true" — читач чекає й озвучує один раз, коли набір спинився
+  const liveRegion = els.commissionUsdt.closest("[aria-live]");
+  let quietTimer = 0;
+
+  const holdAnnouncement = () => {
+    if (!liveRegion) return;
+    liveRegion.setAttribute("aria-busy", "true");
+    clearTimeout(quietTimer);
+    quietTimer = setTimeout(() => liveRegion.setAttribute("aria-busy", "false"), 700);
+  };
+
   const recalculate = () => {
+    holdAnnouncement();
     const amount = readNumber(els.amount.value, LIMITS.amount, TEXTS.amount);
     const rate = readNumber(els.rate.value, LIMITS.rate, TEXTS.rate);
     const type = els.type.value in BASE_RATE ? { value: els.type.value } : { error: TEXTS.type };
@@ -156,6 +188,9 @@
   // на select і checkbox) дає той самий результат, а вивід завжди відповідає останньому стану полів
   form.addEventListener("input", recalculate);
   form.addEventListener("change", recalculate);
+  // Поле лишили — саме тут показуємо помилку, яку притримали під час набору.
+  // focusout, а не blur: blur не піднімається до форми, тому делегування з ним не працює
+  form.addEventListener("focusout", recalculate);
 
   recalculate(); // перший розрахунок — зі значеннями за замовчуванням у розмітці
 })();

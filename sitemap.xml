@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Карта сайту EQUILOCK: 12 сторінок українською (корінь) і 12 англійською (/en/).
+     xhtml:link — мовні версії тієї самої сторінки, як hreflang у <head>. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://equilock-lovat.vercel.app/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/about.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/about.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/about.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/about.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/aml-kyc.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/aml-kyc.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/aml-kyc.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/aml-kyc.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/catalog.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/catalog.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/catalog.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/catalog.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/contacts.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/contacts.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/contacts.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/contacts.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/docs.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/docs.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/docs.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/docs.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/exchange.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/exchange.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/exchange.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/exchange.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/faq.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/faq.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/faq.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/faq.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/privacy.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/status.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/status.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/status.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/status.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/terms.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/terms.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/terms.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/terms.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/thanks.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.1</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/thanks.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/thanks.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/thanks.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/en/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/en/about.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/about.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/about.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/about.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/en/aml-kyc.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/aml-kyc.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/aml-kyc.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/aml-kyc.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/en/catalog.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/catalog.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/catalog.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/catalog.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/en/contacts.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/contacts.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/contacts.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/contacts.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/en/docs.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/docs.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/docs.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/docs.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/en/exchange.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/exchange.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/exchange.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/exchange.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/en/faq.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/faq.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/faq.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/faq.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/en/privacy.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/privacy.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/en/status.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/status.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/status.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/status.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/en/terms.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/terms.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/terms.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/terms.html"/>
+  </url>
+  <url>
+    <loc>https://equilock-lovat.vercel.app/en/thanks.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.1</priority>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://equilock-lovat.vercel.app/thanks.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://equilock-lovat.vercel.app/en/thanks.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://equilock-lovat.vercel.app/thanks.html"/>
+  </url>
+</urlset>
