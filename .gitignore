@@ -9,3 +9,6 @@ node_modules/
 
 # Налаштування редактора
 .vscode/
+
+# Vercel CLI: локальні налаштування проєкту (vercel link / vercel pull) і результат vercel build
+.vercel

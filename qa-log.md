@@ -551,3 +551,16 @@ Chrome на `index.html`: усі 10 кейсів і 3 Happy Path проходя�
   - немає секції калькулятора в `en/index.html`;
   - другий екземпляр не підтримується;
   - не перевірено з реальним читачем екрана.
+
+### Аудит 9 — CI/CD (GitHub Actions → Vercel), 2026-11-18
+
+| Перевірка | Результат |
+|---|---|
+| `.github/workflows/deploy.yml` — синтаксис YAML | OK: розібрано Ruby Psych (`YAML.safe_load`) без помилок |
+| Структура workflow | OK, звірено вручну: тригер `push` → `main`; `env` VERCEL_ORG_ID / VERCEL_PROJECT_ID із secrets; кроки — checkout@v4 → setup-node@v4 (Node 20) → install CLI → pull → build → deploy; токен у всіх трьох командах Vercel |
+| Схема GitHub Actions (`actionlint`) | **не перевірено** — завантаження бінарника відхилено в цьому середовищі |
+| `vercel.json` | OK: валідний JSON, `{"git":{"deploymentEnabled":false}}` |
+| `.vercel` у `.gitignore` | OK: `git check-ignore -v .vercel/project.json` → `.gitignore:14:.vercel` |
+| Реальний запуск | **не запускався**: потрібні секрети `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` у репозиторії і push у `main` |
+
+**Ризик, не змінено.** Сайт статичний, без кроку збирання, тому `vercel build` викладає весь репозиторій. Так само було і з Git-деплоєм. На сайт потрапляють службові файли: `CLAUDE.md`, `prompt-log.md`, `qa-log.md`, `audit/`, `qa-test.js`, `README.md`. Щоб їх не публікувати, треба додати `.vercelignore` — за потреби.
